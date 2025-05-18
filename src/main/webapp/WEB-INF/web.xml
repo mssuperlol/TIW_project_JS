@@ -3,4 +3,28 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
+    <display-name>TIW-projectManagementNo</display-name>
+    <context-param>
+        <param-name>dbUrl</param-name>
+        <param-value>jdbc:mariadb://localhost:3306/tiw_project</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbUser</param-name>
+        <param-value>mssuperlol</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbPassword</param-name>
+        <param-value>bruh</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbDriver</param-name>
+        <param-value>org.mariadb.jdbc.Driver</param-value>
+    </context-param>
+    <context-param>
+        <param-name>musicPath</param-name>
+        <param-value>/home/mssuperlol/Documents/TIW_project_resources/</param-value>
+    </context-param>
+    <welcome-file-list>
+        <welcome-file>login.html</welcome-file>
+    </welcome-file-list>
 </web-app>
