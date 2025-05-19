@@ -5,13 +5,123 @@
     <title>Homepage</title>
     <script src="js/utils.js" charset="utf-8" defer></script>
     <script src="js/logout.js" charset="utf-8" defer></script>
+    <script src="js/formsChecker.js" charset="utf-8" defer></script>
     <!--comment row below for testing-->
-    <script src="js/filter.js" charset="utf-8" defer></script>
+    <!--    <script src="js/filter.js" charset="utf-8" defer></script>-->
+    <link rel="stylesheet" type="text/css" media="all" href="css/hide.css">
+    <link rel="stylesheet" type="text/css" media="all" href="css/error.css">
 </head>
 <body>
 <p>
     <button id="logout">Logout</button>
+    <button id="homepage_button">Homepage</button>
 </p>
-<h1>Bentornato <span id="name">Nome</span> <span id="surname">Cognome</span> <span id="username">:)</span></h1>
+<div id="main_page" class="displayed">
+    <h1>Bentornato <span id="name">Nome</span> <span id="surname">Cognome</span> <span id="username">:)</span></h1>
+    <div id="playlists_list">
+
+    </div>
+    <table id="forms">
+        <tr>
+            <td>
+                <form id="upload_song_form">
+                    <table align="center">
+                        <thead>
+                        <tr>
+                            Aggiungi canzone
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Titolo:</td>
+                            <td><label><input type="text" id="title" maxlength="64"></label></td>
+                            <td><span id="title_error" class="error"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Album:</td>
+                            <td><label><input type="text" name="album_title" maxlength="64"></label></td>
+                            <td><span id="album_error" class="error"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Inteprete:</td>
+                            <td><label><input type="text" name="performer" maxlength="64"></label></td>
+                            <td><span id="performer_error" class="error"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Anno:</td>
+                            <td><label><input type="number" name="year"></label></td>
+                            <td><span id="year_error" class="error"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Genere:</td>
+                            <td>
+                                <label>
+                                    <select name="genre">
+                                        <!--TODO list of genres-->
+                                    </select>
+                                </label>
+                            </td>
+                            <td><span id="genre_error" class="error"></span></td>
+                        </tr>
+                        <tr>
+                            <td>File musicale:</td>
+                            <td><label><input type="file" accept=".mp3, .ogg, .wav" name="music_file"></label>
+                            </td>
+                            <td><span id="music_file_error" class="error"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Immagine:</td>
+                            <td><label><input type="file" accept="image/*" name="image_file"></label></td>
+                            <td><span id="image_file_error" class="error"></span></td>
+                        </tr>
+                        <tr>
+                            <td><input type="submit" value="Carica brano ->"></td>
+                            <td><span id="upload_song_result" class="error"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <form id="create_playlist_form">
+                    <table align="center">
+                        <thead>
+                        <tr>
+                            Crea playlist
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Titolo:</td>
+                            <td><label>
+                                <input type="text" name="title" maxlength="64" required>
+                            </label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>Canzone</span>
+                            </td>
+                            <td><label>
+                                <input type="checkbox">
+                            </label></td>
+                        </tr>
+                        <tr>
+                            <td><input type="submit" value="Crea playlist ->"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="playlist_page" class="masked">
+
+</div>
+<div id="song_page" class="masked">
+
+</div>
 </body>
 </html>

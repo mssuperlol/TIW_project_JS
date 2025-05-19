@@ -1,6 +1,6 @@
 (function () {
     document.getElementById("login_form").addEventListener('submit', (e) => {
-        e.preventDefault()
+        e.preventDefault();
         let form = e.target.closest("form");
         if (form.checkValidity()) {
             makeCall("POST", 'CheckLogin', form, function (x) {
