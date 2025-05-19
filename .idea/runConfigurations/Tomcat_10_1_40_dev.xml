@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Tomcat 10.1.40-dev" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.40-dev" ALTERNATIVE_JRE_ENABLED="false">
     <option name="BROWSER_ID" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+    <option name="UPDATING_POLICY" value="restart-server" />
     <deployment>
       <artifact name="TIW_project_JS:war exploded">
         <settings>
