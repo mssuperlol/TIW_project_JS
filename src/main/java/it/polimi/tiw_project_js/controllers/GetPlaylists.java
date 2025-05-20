@@ -50,7 +50,7 @@ public class GetPlaylists extends HttpServlet {
             return;
         }
 
-        Gson gson = new GsonBuilder().setDateFormat("yyyy mm dd").create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy MM dd").create();
         String json = gson.toJson(playlists);
 
         response.setContentType("application/json");
