@@ -1,0 +1,4 @@
+.double_table {
+    table-layout: fixed;
+    border: double;
+}
