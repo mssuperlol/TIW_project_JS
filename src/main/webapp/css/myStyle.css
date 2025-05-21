@@ -1,4 +1,13 @@
-.double_table {
-    table-layout: fixed;
-    border: double;
+.playlist_table {
+    table {
+        table-layout: fixed;
+        border: double;
+        width: 30%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 10px;
+    }
 }

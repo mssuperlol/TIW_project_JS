@@ -18,7 +18,7 @@ function ShowPage() {
                         let row, nameCell, dateCell, table, tbody, thead, th;
 
                         table = document.createElement("table");
-                        table.className = "double_table";
+                        table.className = "playlist_table";
                         document.getElementById("playlists_list").appendChild(table);
 
                         thead = document.createElement("thead");
