@@ -160,6 +160,29 @@ public class SongDAO {
     }
 
     /**
+     * @param userId id of the user
+     * @return a list of the user's songs ids
+     * @throws SQLException
+     */
+    public List<Integer> getSongsIdFromUserId(int userId) throws SQLException {
+        String query = "SELECT id FROM songs WHERE user_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                List<Integer> songIds = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    songIds.add(resultSet.getInt("id"));
+                }
+
+                return songIds;
+            }
+        }
+    }
+
+    /**
      * @param resultSet
      * @return
      * @throws SQLException

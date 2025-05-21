@@ -156,4 +156,24 @@ public class PlaylistDAO {
             }
         }
     }
+
+    /**
+     * @param playlistId id of the playlist
+     * @return id of user who created the playlist, -1 if not found
+     * @throws SQLException
+     */
+    public int getUserId(int playlistId) throws SQLException {
+        String query = "SELECT user_id FROM playlists WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, playlistId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (!resultSet.isBeforeFirst() || !resultSet.next()) {
+                    return -1;
+                }
+                return resultSet.getInt("user_id");
+            }
+        }
+    }
 }
