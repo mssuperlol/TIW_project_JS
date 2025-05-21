@@ -19,7 +19,7 @@
     <button id="homepage_button">Homepage</button>
 </p>
 <div id="main_page" class="displayed">
-    <h1>Bentornato <span id="name">Nome</span> <span id="surname">Cognome</span> <span id="username">:)</span></h1>
+    <h1>Bentornato <span id="name">Nome</span> <span id="surname">Cognome</span></h1>
     <div id="playlists_list">
 
     </div>
@@ -58,9 +58,7 @@
                             <td>Genere:</td>
                             <td>
                                 <label>
-                                    <select name="genre">
-                                        <!--TODO list of genres-->
-                                    </select>
+                                    <select name="genre" id="genre"></select>
                                 </label>
                             </td>
                             <td><span id="genre_error" class="error"></span></td>
@@ -92,23 +90,12 @@
                             Crea playlist
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="create_playlist_table">
                         <tr>
                             <td>Titolo:</td>
                             <td><label>
                                 <input type="text" name="title" maxlength="64" required>
                             </label></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>Canzone</span>
-                            </td>
-                            <td><label>
-                                <input type="checkbox">
-                            </label></td>
-                        </tr>
-                        <tr>
-                            <td><input type="submit" value="Crea playlist ->"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -117,9 +104,11 @@
         </tr>
     </table>
 </div>
+
 <div id="playlist_page" class="masked">
 
 </div>
+
 <div id="song_page" class="masked">
 
 </div>
