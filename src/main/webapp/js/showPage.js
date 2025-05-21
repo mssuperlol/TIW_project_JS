@@ -16,6 +16,31 @@ function ShowPage() {
             }
         });
 
+        this.updatePlaylists();
+        this.updateSongsHomepage()
+
+        makeCall("GET", "GetGenres", null, function (req) {
+            if (req.readyState === 4) {
+                if (req.status === 200) {
+                    let genres = JSON.parse(req.responseText);
+                    let genreChoiceMenu = document.getElementById("genre");
+                    let option;
+
+                    genres.forEach(function (genre) {
+                        option = document.createElement("option");
+                        option.value = genre;
+                        option.textContent = genre;
+                        genreChoiceMenu.appendChild(option);
+                    });
+                } else {
+                    window.location.href = req.getResponseHeader("Location");
+                    window.sessionStorage.removeItem('user');
+                }
+            }
+        });
+    }
+
+    this.updatePlaylists = function () {
         makeCall("GET", "GetPlaylists", null, function (req) {
             if (req.readyState === 4) {
                 let message = req.responseText;
@@ -71,27 +96,9 @@ function ShowPage() {
                 }
             }
         });
+    }
 
-        makeCall("GET", "GetGenres", null, function (req) {
-            if (req.readyState === 4) {
-                if (req.status === 200) {
-                    let genres = JSON.parse(req.responseText);
-                    let genreChoiceMenu = document.getElementById("genre");
-                    let option;
-
-                    genres.forEach(function (genre) {
-                        option = document.createElement("option");
-                        option.value = genre;
-                        option.textContent = genre;
-                        genreChoiceMenu.appendChild(option);
-                    });
-                } else {
-                    window.location.href = req.getResponseHeader("Location");
-                    window.sessionStorage.removeItem('user');
-                }
-            }
-        });
-
+    this.updateSongsHomepage = function () {
         makeCall("GET", "GetSongsByUserID", null, function (req) {
             if (req.readyState === 4) {
                 if (req.status === 200) {
