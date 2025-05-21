@@ -1,6 +1,20 @@
 function ShowPage() {
     this.showHomepage = function () {
         document.getElementById("main_page").className = "displayed";
+        document.getElementById("homepage_button").className = "masked";
+
+        makeCall("GET", "GetUser", null, function (req) {
+            if (req.readyState === 4) {
+                if (req.status === 200) {
+                    let user = JSON.parse(req.responseText);
+                    document.getElementById("name").textContent = user.name;
+                    document.getElementById("surname").textContent = user.surname;
+                } else {
+                    window.location.href = req.getResponseHeader("Location");
+                    window.sessionStorage.removeItem('user');
+                }
+            }
+        });
 
         makeCall("GET", "GetPlaylists", null, function (req) {
             if (req.readyState === 4) {
@@ -54,6 +68,72 @@ function ShowPage() {
                     let text = document.createElement("p");
                     text.textContent = message;
                     playlistList.appendChild(text);
+                }
+            }
+        });
+
+        makeCall("GET", "GetGenres", null, function (req) {
+            if (req.readyState === 4) {
+                if (req.status === 200) {
+                    let genres = JSON.parse(req.responseText);
+                    let genreChoiceMenu = document.getElementById("genre");
+                    let option;
+
+                    genres.forEach(function (genre) {
+                        option = document.createElement("option");
+                        option.value = genre;
+                        option.textContent = genre;
+                        genreChoiceMenu.appendChild(option);
+                    });
+                } else {
+                    window.location.href = req.getResponseHeader("Location");
+                    window.sessionStorage.removeItem('user');
+                }
+            }
+        });
+
+        makeCall("GET", "GetSongsByUserID", null, function (req) {
+            if (req.readyState === 4) {
+                if (req.status === 200) {
+                    let songs = JSON.parse(req.responseText);
+                    let songsCheckbox = document.getElementById("create_playlist_table");
+                    let row, titleCell, checkboxCell, checkboxLabel, checkboxInput;
+
+                    songs.forEach(function (song) {
+                        row = document.createElement("tr");
+
+                        titleCell = document.createElement("td");
+                        titleCell.textContent = song.title;
+                        row.appendChild(titleCell);
+
+                        checkboxCell = document.createElement("td");
+                        row.appendChild(checkboxCell);
+
+                        checkboxLabel = document.createElement("label");
+                        checkboxCell.appendChild(checkboxLabel);
+
+                        checkboxInput = document.createElement("input");
+                        checkboxInput.type = "checkbox";
+                        checkboxInput.name = "songId" + song.id;
+                        checkboxLabel.appendChild(checkboxInput);
+
+                        songsCheckbox.append(row);
+                    });
+
+                    row = document.createElement("tr");
+
+                    let submitCell = document.createElement("td");
+                    row.appendChild(submitCell);
+
+                    let submit = document.createElement("input");
+                    submit.type = "submit";
+                    submit.value = "Crea playlist ->";
+                    submitCell.appendChild(submit);
+
+                    songsCheckbox.appendChild(row);
+                } else {
+                    window.location.href = req.getResponseHeader("Location");
+                    window.sessionStorage.removeItem('user');
                 }
             }
         });
