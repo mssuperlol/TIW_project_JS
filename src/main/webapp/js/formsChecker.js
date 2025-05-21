@@ -56,10 +56,22 @@ window.onload = () => (
         }
 
         if (success === true) {
-            document.getElementById("upload_song_result").className = "success";
-            document.getElementById("upload_song_result").textContent = "Canzone caricata con successo";
-            // TODO caricare la canzone
-            document.getElementById("upload_song_form").reset();
+            makeCall("POST", "UploadSong", form, function (req) {
+                if (req.status === 200) {
+                    document.getElementById("upload_song_result").className = "success";
+                    document.getElementById("upload_song_result").textContent = "Canzone caricata con successo";
+                    document.getElementById("upload_song_form").reset();
+
+                    let showPage = new ShowPage();
+                    showPage.updateSongsHomepage();
+                } else if (req.status === 403) {
+                    window.location.href = req.getResponseHeader("Location");
+                    window.sessionStorage.removeItem('user');
+                } else {
+                    document.getElementById("upload_song_result").className = "error";
+                    document.getElementById("upload_song_result").textContent = "Errore: " + req.responseText;
+                }
+            });
         } else {
             document.getElementById("upload_song_result").className = "error";
             document.getElementById("upload_song_result").textContent = "Errore nel caricamento";
