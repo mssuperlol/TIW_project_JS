@@ -11,3 +11,17 @@
         padding: 10px;
     }
 }
+
+.songs_table {
+    table {
+        table-layout: fixed;
+        border: double;
+        width: 75%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 10px;
+    }
+}
