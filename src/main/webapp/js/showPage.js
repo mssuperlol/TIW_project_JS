@@ -17,7 +17,7 @@ function ShowPage() {
         });
 
         this.updatePlaylists();
-        this.updateSongsHomepage()
+        this.updateCreatePlaylistForm();
 
         makeCall("GET", "GetGenres", null, function (req) {
             if (req.readyState === 4) {
@@ -98,12 +98,19 @@ function ShowPage() {
         });
     }
 
-    this.updateSongsHomepage = function () {
+    this.updateCreatePlaylistForm = function () {
         makeCall("GET", "GetSongsByUserID", null, function (req) {
             if (req.readyState === 4) {
                 if (req.status === 200) {
                     let songs = JSON.parse(req.responseText);
                     let songsCheckbox = document.getElementById("create_playlist_table");
+                    // songsCheckbox.innerHTML =
+                    //     "<tr>\n" +
+                    //     "  <td>Titolo:</td>\n" +
+                    //     "  <td><label>\n" +
+                    //     "    <input type=\"text\" name=\"title\" maxlength=\"64\">\n" +
+                    //     "  </label></td>\n" +
+                    //     "</tr>";
                     let row, titleCell, checkboxCell, checkboxLabel, checkboxInput;
 
                     songs.forEach(function (song) {
@@ -136,6 +143,12 @@ function ShowPage() {
                     submit.type = "submit";
                     submit.value = "Crea playlist ->";
                     submitCell.appendChild(submit);
+
+                    submitCell = document.createElement("td");
+                    submitCell.className = "error";
+                    submitCell.id = "create_playlist_result";
+                    submitCell.textContent = "";
+                    row.appendChild(submitCell);
 
                     songsCheckbox.appendChild(row);
                 } else {
