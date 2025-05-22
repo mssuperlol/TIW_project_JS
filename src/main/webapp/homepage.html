@@ -5,6 +5,7 @@
     <title>Homepage</title>
     <script src="js/utils.js" charset="utf-8" defer></script>
     <script src="js/logout.js" charset="utf-8" defer></script>
+    <script src="js/homepageButton.js" charset="utf-8" defer></script>
     <script src="js/formsChecker.js" charset="utf-8" defer></script>
     <script src="js/showPage.js" charset="utf-8" defer></script>
     <!--comment row below for testing-->
@@ -20,9 +21,9 @@
 </p>
 <div id="main_page" class="displayed">
     <h1>Bentornato <span id="name">Nome</span> <span id="surname">Cognome</span></h1>
-    <div id="playlists_list">
 
-    </div>
+    <div id="playlists_list"></div>
+
     <table id="forms">
         <tr>
             <td>
@@ -104,7 +105,28 @@
 </div>
 
 <div id="playlist_page" class="masked">
+    <h1><span id="playlist_title"></span></h1>
+    <p>Creata il <span id="playlist_date"></span></p>
 
+    <table class="songs_table">
+        <tbody>
+        <tr>
+            <td>
+                <button id="prev_songs"><- Precedenti</button>
+            </td>
+            <td>
+                <table class="songs_table">
+                    <tbody>
+                    <tr id="displayed_songs"></tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <button id="next_songs">Successive -></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <div id="song_page" class="masked">
