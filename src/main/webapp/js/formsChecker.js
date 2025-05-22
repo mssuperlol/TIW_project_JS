@@ -85,7 +85,7 @@ document.getElementById("upload_song_form").addEventListener('submit', function 
         });
     } else {
         document.getElementById("upload_song_result").className = "error";
-        document.getElementById("upload_song_result").textContent = "Errore nel caricamento";
+        document.getElementById("upload_song_result").textContent = "Operazione annullata";
     }
 }, false);
 
