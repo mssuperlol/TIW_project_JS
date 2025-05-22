@@ -11,6 +11,7 @@ import jakarta.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -97,6 +98,10 @@ public class UploadSong extends HttpServlet {
             outputFile = new File(outputPath);
             try (InputStream fileContent = musicFilePart.getInputStream()) {
                 Files.copy(fileContent, outputFile.toPath());
+            } catch (FileAlreadyExistsException e) {
+                response.setStatus(HttpServletResponse.SC_CONFLICT);
+                response.getWriter().println("File already exists");
+                return;
             }
 
             //update the db
@@ -108,8 +113,10 @@ public class UploadSong extends HttpServlet {
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Missing parameters");
+            return;
         }
 
+        response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
