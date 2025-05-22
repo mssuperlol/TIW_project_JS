@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @WebServlet("/CreatePlaylist")
@@ -31,13 +32,18 @@ public class CreatePlaylist extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
+        response.setContentType("application/json");
 
         PlaylistDAO playlistDAO = new PlaylistDAO(connection);
         SongDAO songDAO = new SongDAO(connection);
         int userId = user.getId();
-        //TODO fix title always being null
         String title = request.getParameter("title");
         List<Integer> songs = new ArrayList<>(), userSongsId;
+
+        //TODO fix the request having no parameters
+        request.getParameterMap().forEach((k, v) -> {
+            System.out.println("key: " + k + " | value: " + Arrays.toString(v));
+        });
 
         if (title == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -49,7 +55,7 @@ public class CreatePlaylist extends HttpServlet {
             userSongsId = songDAO.getSongsIdFromUserId(userId);
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Database error");
+            response.getWriter().println("Database error: couldn't retrieve user songs");
             return;
         }
 
@@ -64,11 +70,10 @@ public class CreatePlaylist extends HttpServlet {
             playlistDAO.insertPlaylist(userId, title, songs);
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Database error");
+            response.getWriter().println("Database error: couldn't create playlist");
             return;
         }
 
-        response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
