@@ -7,6 +7,7 @@ function ShowPage() {
         document.getElementById("playlist_page").className = "masked";
         document.getElementById("song_page").className = "masked";
 
+    this.homepageInit = function () {
         makeCall("GET", "GetUser", null, function (req) {
             if (req.readyState === 4) {
                 if (req.status === 200) {
@@ -42,11 +43,20 @@ function ShowPage() {
                 }
             }
         });
+
+        this.updatePlaylists();
+        this.updateCreatePlaylistForm();
+        this.showHomepage();
     }
 
+    this.showHomepage = function () {
+        document.getElementById("main_page").className = "displayed";
+        document.getElementById("homepage_button").className = "masked";
+        document.getElementById("playlist_page").className = "masked";
+        document.getElementById("song_page").className = "masked";
+    }
     this.showPlaylistPage = function (playlistId) {
-        let self = this;
-        self.showPlaylistPage(playlistId, 0)
+        this.showPlaylistPage(playlistId, 0);
     }
 
     this.showPlaylistPage = function (playlistId, songsIndex) {
