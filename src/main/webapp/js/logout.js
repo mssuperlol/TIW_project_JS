@@ -1,3 +1,6 @@
+/**
+ * Adds a listener to the logout button, that calls the Logout servlet and logs out the user + clears the session storage if everything goes well.
+ */
 (function () {
     document.getElementById("logout").addEventListener('click', (e) => {
         e.preventDefault()

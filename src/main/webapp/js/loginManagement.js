@@ -1,3 +1,6 @@
+/**
+ * Login form controller. If the form is valid, calls the CheckLogin servlet to check the credentials. If they are correct, saves the user_id in the session and sends the user to homepage.html; otherwise displays an error message.
+ */
 (function () {
     document.getElementById("login_form").addEventListener('submit', (e) => {
         e.preventDefault();

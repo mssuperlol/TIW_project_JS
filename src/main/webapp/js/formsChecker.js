@@ -1,6 +1,8 @@
-//UploadSong form controller
-let maxDimension = 64;
+const maxDimension = 64;
 
+/**
+ * UploadSong form controller. Checks if all the inputted values are valid: if so, the calls the UploadSong servlet; otherwise, clears the invalid values and displays an error. If the song is uploaded correctly, also updates the createPlaylist form with the new value.
+ */
 document.getElementById("upload_song_form").addEventListener('submit', function check(e) {
     e.preventDefault();
     let success = true;
@@ -27,8 +29,8 @@ document.getElementById("upload_song_form").addEventListener('submit', function 
     if (form.performer.value === null || form.performer.value === "") {
         document.getElementById("performer_error").textContent = "L'interprete non può essere vuoto";
         success = false;
-    }else if (form.performer.value.length > maxDimension) {
-        document.getElementById("performer_error").textContent = "Dimensione massima: "+ maxDimension;
+    } else if (form.performer.value.length > maxDimension) {
+        document.getElementById("performer_error").textContent = "Dimensione massima: " + maxDimension;
         success = false;
     } else {
         document.getElementById("performer_error").textContent = "";
@@ -89,7 +91,9 @@ document.getElementById("upload_song_form").addEventListener('submit', function 
     }
 }, false);
 
-//CreatePlaylist form controller
+/**
+ * CreatePlaylist form controller. Checks if the title is valid, then calls the CreatePlaylist servlet. If the playlist is created correctly, also updates the playlist list in the homepage with the newly created one.
+ */
 document.getElementById("create_playlist_form").addEventListener('submit', function check(e) {
     e.preventDefault();
     let form = e.target.closest("form");

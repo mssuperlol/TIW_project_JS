@@ -1,5 +1,13 @@
+/**
+ * Function that handles calls to servlets
+ * @param method whether to use GET or POST method of the servlet
+ * @param url of the servlet to call
+ * @param formElement
+ * @param cback
+ * @param reset
+ */
 function makeCall(method, url, formElement, cback, reset = true) {
-    var req = new XMLHttpRequest(); // visible by closure
+    let req = new XMLHttpRequest(); // visible by closure
     req.onreadystatechange = function () {
         cback(req)
     }; // closure

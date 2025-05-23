@@ -1,12 +1,13 @@
-let VISIBLE_SONGS = 5;
+const VISIBLE_SONGS = 5;
 
+/**
+ * Contains functions to switch between the homepage, playlist page and song page.
+ * @constructor
+ */
 function ShowPage() {
-    this.showHomepage = function () {
-        document.getElementById("main_page").className = "displayed";
-        document.getElementById("homepage_button").className = "masked";
-        document.getElementById("playlist_page").className = "masked";
-        document.getElementById("song_page").className = "masked";
-
+    /**
+     * Initialises the homepage by calling GetUser and GetGenres servlets, and then calling updatePlaylists, updateCreatePlaylistForm and showHomepage
+     */
     this.homepageInit = function () {
         makeCall("GET", "GetUser", null, function (req) {
             if (req.readyState === 4) {
@@ -20,9 +21,6 @@ function ShowPage() {
                 }
             }
         });
-
-        this.updatePlaylists();
-        this.updateCreatePlaylistForm();
 
         makeCall("GET", "GetGenres", null, function (req) {
             if (req.readyState === 4) {
@@ -49,16 +47,29 @@ function ShowPage() {
         this.showHomepage();
     }
 
+    /**
+     * Makes the div main_page visible and masks the other pages and homepage_button
+     */
     this.showHomepage = function () {
         document.getElementById("main_page").className = "displayed";
         document.getElementById("homepage_button").className = "masked";
         document.getElementById("playlist_page").className = "masked";
         document.getElementById("song_page").className = "masked";
     }
+
+    /**
+     * TODO
+     * @param playlistId
+     */
     this.showPlaylistPage = function (playlistId) {
         this.showPlaylistPage(playlistId, 0);
     }
 
+    /**
+     * TODO
+     * @param playlistId
+     * @param songsIndex
+     */
     this.showPlaylistPage = function (playlistId, songsIndex) {
         let self = this;
         document.getElementById("main_page").className = "masked";
@@ -118,6 +129,9 @@ function ShowPage() {
         });
     }
 
+    /**
+     * TODO
+     */
     this.showSongPage = function () {
         document.getElementById("main_page").className = "masked";
         document.getElementById("homepage_button").className = "displayed";
@@ -127,6 +141,9 @@ function ShowPage() {
         //TODO implement songPage
     }
 
+    /**
+     * Calls the GetPlaylists servlet to update the list of playlists at the beginning of the homepage
+     */
     this.updatePlaylists = function () {
         let self = this;
 
@@ -198,6 +215,9 @@ function ShowPage() {
         });
     }
 
+    /**
+     * Calls the GetSongsByUserID servlet to update the form to create a new playlist in the homepage with the current user's songs
+     */
     this.updateCreatePlaylistForm = function () {
         makeCall("GET", "GetSongsByUserID", null, function (req) {
             if (req.readyState === 4) {
