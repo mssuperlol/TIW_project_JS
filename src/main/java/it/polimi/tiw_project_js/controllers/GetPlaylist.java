@@ -18,13 +18,13 @@ import java.io.Serial;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet("/GetFullPlaylist")
-public class GetFullPlaylist extends HttpServlet {
+@WebServlet("/GetPlaylist")
+public class GetPlaylist extends HttpServlet {
     @Serial
     private static final long serialVersionUID = 1L;
     private Connection connection = null;
 
-    public GetFullPlaylist() {
+    public GetPlaylist() {
         super();
     }
 
@@ -53,7 +53,7 @@ public class GetFullPlaylist extends HttpServlet {
         Playlist playlist;
 
         try {
-            playlist = playlistDAO.getFullPlaylist(playlistId);
+            playlist = playlistDAO.getPlaylist(playlistId);
         } catch (SQLException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

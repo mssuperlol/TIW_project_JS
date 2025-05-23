@@ -54,13 +54,13 @@ public class PlaylistDAO {
     }
 
     /**
-     * Given a playlist ID, returns all the information of that playlist and a list its songs
+     * Given a playlist ID, returns all the information of that playlist
      *
      * @param playlistId ID of the playlist
      * @return Playlist object with all the information
      * @throws SQLException
      */
-    public Playlist getFullPlaylist(int playlistId) throws SQLException {
+    public Playlist getPlaylist(int playlistId) throws SQLException {
         String query = "SELECT * " +
                 "FROM playlists " +
                 "WHERE id = ?";
@@ -78,12 +78,6 @@ public class PlaylistDAO {
                 playlist.setUserId(resultSet.getInt("user_id"));
                 playlist.setName(resultSet.getString("title"));
                 playlist.setDate(resultSet.getDate("date"));
-                List<Song> songsList = new SongDAO(connection).getAllSongsFromPlaylist(playlistId);
-                if (songsList == null) {
-                    playlist.setSongs(new ArrayList<>());
-                } else {
-                    playlist.setSongs(songsList);
-                }
 
                 return playlist;
             }
