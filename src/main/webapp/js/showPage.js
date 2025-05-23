@@ -58,25 +58,11 @@ function ShowPage() {
     }
 
     /**
-     * TODO
+     * Initialises playlist page with the given playlist.
      * @param playlistId
      */
-    this.showPlaylistPage = function (playlistId) {
-        this.showPlaylistPage(playlistId, 0);
-    }
-
-    /**
-     * TODO
-     * @param playlistId
-     * @param songsIndex
-     */
-    this.showPlaylistPage = function (playlistId, songsIndex) {
+    this.playlistPageInit = function (playlistId) {
         let self = this;
-        document.getElementById("main_page").className = "masked";
-        document.getElementById("homepage_button").className = "displayed";
-        document.getElementById("playlist_page").className = "displayed";
-        document.getElementById("song_page").className = "masked";
-
         makeCall("GET", "GetFullPlaylist?playlistId=" + playlistId, null, function (req) {
             if (req.readyState === 4) {
                 let message = req.responseText;
@@ -88,45 +74,91 @@ function ShowPage() {
 
                     let allSongs = currPlaylist.songs;
                     let currSongsTable = document.getElementById("displayed_songs");
-                    let song, songCell, songImage;
+                    let row, song, songCell, songImage;
 
                     currSongsTable.innerHTML = "";
 
-                    if (songsIndex === null || isNaN(songsIndex) || songsIndex < 0 || songsIndex * VISIBLE_SONGS > allSongs.length) {
-                        songsIndex = 0;
+                    for (let i = 0; i < allSongs.length % VISIBLE_SONGS; i++) {
+                        row = document.createElement("tr");
+                        row.id = i.toString();
+
+                        for (let j = 0; j < VISIBLE_SONGS; j++) {
+                            if (i * VISIBLE_SONGS + j < allSongs.length) {
+                                song = allSongs[i * VISIBLE_SONGS + j];
+                                songCell = document.createElement("td");
+                                songCell.textContent = song.title;
+                                //TODO songImage
+
+                                row.appendChild(songCell);
+                            }
+                        }
+
+                        currSongsTable.appendChild(row);
                     }
 
-                    for (let i = 0; i + songsIndex * VISIBLE_SONGS < allSongs.length && i < VISIBLE_SONGS; i++) {
-                        song = allSongs[i + songsIndex * VISIBLE_SONGS];
-                        songCell = document.createElement("td");
-                        songCell.textContent = song.title;
-                        //TODO songImage
-
-                        currSongsTable.appendChild(songCell);
-                    }
-
-                    if (songsIndex !== 0) {
-                        document.getElementById("prev_songs").className = "displayed";
-                        document.getElementById("prev_songs").addEventListener("click", (e) => {
-                            e.preventDefault();
-                            self.showPlaylistPage(playlistId, songsIndex - 1);
-                        });
-                    } else {
-                        document.getElementById("prev_songs").className = "masked";
-                    }
-
-                    if ((songsIndex + 1) * VISIBLE_SONGS < allSongs.length) {
-                        document.getElementById("next_songs").className = "displayed";
-                        document.getElementById("next_songs").addEventListener("click", (e) => {
-                            e.preventDefault();
-                            self.showPlaylistPage(playlistId, songsIndex + 1);
-                        });
-                    } else {
-                        document.getElementById("next_songs").className = "masked";
-                    }
+                    self.showVisibleSongs(0);
                 }
             }
         });
+
+        this.showPlaylistPage();
+    }
+
+    /**
+     * Makes the playlist_page div and homepage_button displayed, while masking the other pages.
+     */
+    this.showPlaylistPage = function () {
+        document.getElementById("main_page").className = "masked";
+        document.getElementById("homepage_button").className = "displayed";
+        document.getElementById("playlist_page").className = "displayed";
+        document.getElementById("song_page").className = "masked";
+    }
+
+    /**
+     * Handles the switching between songs in the same playlist.
+     * @param songsIndex index of the visible songs. If it's invalid, defaults at 0.
+     */
+    this.showVisibleSongs = function (songsIndex) {
+        let maxRow = 0;
+
+        for (let i = 0; document.getElementById(i.toString()) !== null; i++) {
+            maxRow = i;
+        }
+
+        console.log("maxRow = " + maxRow + "\n");
+
+        if (songsIndex === null || isNaN(songsIndex) || songsIndex < 0 || songsIndex > maxRow) {
+            songsIndex = 0;
+        }
+
+        for (let i = 0; i <= maxRow; i++) {
+            if (i !== songsIndex) {
+                document.getElementById(i.toString()).className = "masked";
+            } else {
+                document.getElementById(songsIndex).className = "displayed";
+            }
+        }
+
+        if (songsIndex !== 0) {
+            document.getElementById("prev_songs").className = "displayed";
+            document.getElementById("prev_songs").addEventListener("click", (e) => {
+                e.preventDefault();
+                this.showVisibleSongs(songsIndex - 1);
+            });
+        } else {
+            document.getElementById("prev_songs").className = "masked";
+        }
+
+        if (songsIndex < maxRow) {
+            document.getElementById("next_songs").className = "displayed";
+            document.getElementById("next_songs").addEventListener("click", (e) => {
+                e.preventDefault();
+                console.log("songsIndex: " + songsIndex);
+                this.showVisibleSongs(songsIndex + 1);
+            });
+        } else {
+            document.getElementById("next_songs").className = "masked";
+        }
     }
 
     /**
@@ -191,9 +223,9 @@ function ShowPage() {
                             //playlistLink.href = "";
                             nameCell.appendChild(playlistLink);
 
-                            //calls showPlaylistPage on the clicked playlist
+                            //calls playlistPageInit on the clicked playlist
                             playlistLink.onclick = function () {
-                                self.showPlaylistPage(playlist.id);
+                                self.playlistPageInit(playlist.id);
                             }
 
                             dateCell = document.createElement("td");
