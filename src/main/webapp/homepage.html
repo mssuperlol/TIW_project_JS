@@ -125,9 +125,25 @@
         </tr>
         </tbody>
     </table>
+
+    <form id="add_songs_to_playlist"></form>
 </div>
 
 <div id="song_page" class="masked">
+    <h1><span id="song_title"></span></h1>
+    <img id="song_image" src="" alt="Foto della canzone corrente" height=200 width=200><br>
+    <audio controls>
+        <source id="song_player" type="audio/mpeg">
+    </audio>
+    <br>
+    Titolo dell'album: <span id="album_title"></span><br>
+    Interprete: <span id="song_performer"></span><br>
+    Anno: <span id="song_year"></span><br>
+    Genere: <span id="song_genre"></span><br>
+    <button id="return_to_playlist">Torna alla playlist</button>
+</div>
+
+<div id="reorder_page" class="masked">
 
 </div>
 </body>
