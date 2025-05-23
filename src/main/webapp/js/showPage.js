@@ -55,6 +55,7 @@ function ShowPage() {
         document.getElementById("homepage_button").className = "masked";
         document.getElementById("playlist_page").className = "masked";
         document.getElementById("song_page").className = "masked";
+        document.getElementById("reorder_page").className = "masked";
     }
 
     /**
@@ -63,45 +64,80 @@ function ShowPage() {
      */
     this.playlistPageInit = function (playlistId) {
         let self = this;
-        makeCall("GET", "GetFullPlaylist?playlistId=" + playlistId, null, function (req) {
-            if (req.readyState === 4) {
-                let message = req.responseText;
+        makeCall("GET", "GetPlaylist?playlistId=" + playlistId, null, function (playlistReq) {
+            if (playlistReq.readyState === 4) {
+                let playlistMessage = playlistReq.responseText;
 
-                if (req.status === 200) {
-                    let currPlaylist = JSON.parse(message);
+                if (playlistReq.status === 200) {
+                    let currPlaylist = JSON.parse(playlistMessage);
                     document.getElementById("playlist_title").textContent = currPlaylist.name;
                     document.getElementById("playlist_date").textContent = currPlaylist.date;
 
-                    let allSongs = currPlaylist.songs;
-                    let currSongsTable = document.getElementById("displayed_songs");
-                    let row, song, songCell, songImage;
+                    makeCall("GET", "GetSongsFromPlaylist?playlistId=" + playlistId, null, function (songsReq) {
+                        if (songsReq.readyState === 4) {
+                            let songsMessage = songsReq.responseText;
 
-                    currSongsTable.innerHTML = "";
+                            if (songsReq.status === 200) {
+                                let allSongs = JSON.parse(songsMessage);
+                                let currSongsTable = document.getElementById("displayed_songs");
+                                let row, song;
 
-                    for (let i = 0; i < allSongs.length % VISIBLE_SONGS; i++) {
-                        row = document.createElement("tr");
-                        row.id = i.toString();
+                                currSongsTable.innerHTML = "";
 
-                        for (let j = 0; j < VISIBLE_SONGS; j++) {
-                            if (i * VISIBLE_SONGS + j < allSongs.length) {
-                                song = allSongs[i * VISIBLE_SONGS + j];
-                                songCell = document.createElement("td");
-                                songCell.textContent = song.title;
-                                //TODO songImage
+                                for (let i = 0; i < allSongs.length % VISIBLE_SONGS; i++) {
+                                    row = document.createElement("tr");
+                                    row.id = i.toString();
 
-                                row.appendChild(songCell);
+                                    for (let j = 0; j < VISIBLE_SONGS; j++) {
+                                        if (i * VISIBLE_SONGS + j < allSongs.length) {
+                                            song = allSongs[i * VISIBLE_SONGS + j];
+
+                                            self.addSongCell(song, row);
+                                        }
+                                    }
+
+                                    currSongsTable.appendChild(row);
+                                }
+
+                                self.showVisibleSongs(0);
                             }
                         }
-
-                        currSongsTable.appendChild(row);
-                    }
-
-                    self.showVisibleSongs(0);
+                    });
                 }
             }
         });
 
         this.showPlaylistPage();
+    }
+
+    /**
+     * Adds to the given row, the song's title and image
+     * @param song
+     * @param row
+     */
+    this.addSongCell = function (song, row) {
+        let self = this;
+        let songCell, songImage, songId;
+        songCell = document.createElement("td");
+        songCell.textContent = song.title;
+
+        songCell.appendChild(document.createElement("br"));
+
+        songImage = document.createElement("img");
+        songImage.src = song.imageContent;
+        songImage.alt = "Foto di " + song.title;
+        songImage.height = 200;
+        songImage.width = 200;
+
+        songCell.appendChild(songImage);
+
+        //this function was needed to not mess up the onclick event
+        songId = song.id;
+        songCell.onclick = function () {
+            self.showSongPage(songId);
+        }
+
+        row.appendChild(songCell);
     }
 
     /**
@@ -112,6 +148,7 @@ function ShowPage() {
         document.getElementById("homepage_button").className = "displayed";
         document.getElementById("playlist_page").className = "displayed";
         document.getElementById("song_page").className = "masked";
+        document.getElementById("reorder_page").className = "masked";
     }
 
     /**
@@ -124,8 +161,6 @@ function ShowPage() {
         for (let i = 0; document.getElementById(i.toString()) !== null; i++) {
             maxRow = i;
         }
-
-        console.log("maxRow = " + maxRow + "\n");
 
         if (songsIndex === null || isNaN(songsIndex) || songsIndex < 0 || songsIndex > maxRow) {
             songsIndex = 0;
@@ -162,13 +197,49 @@ function ShowPage() {
     }
 
     /**
-     * TODO
+     * Initialises the song page with the given song, by making a call to the GetSong servlet
+     * @param songId
      */
-    this.showSongPage = function () {
+    this.showSongPage = function (songId) {
+        let self = this;
         document.getElementById("main_page").className = "masked";
         document.getElementById("homepage_button").className = "displayed";
         document.getElementById("playlist_page").className = "masked";
         document.getElementById("song_page").className = "displayed";
+        document.getElementById("reorder_page").className = "masked";
+        document.getElementById("return_to_playlist").onclick = function () {
+            self.showPlaylistPage();
+        }
+
+        makeCall("GET", "GetSong?songId=" + songId, null, function (req) {
+            if (req.readyState === 4) {
+                let message = req.responseText;
+                if (req.status === 200) {
+                    let song = JSON.parse(message);
+                    document.getElementById("song_title").textContent = song.title;
+                    document.getElementById("song_image").src = song.imageContent;
+                    //TODO fix song_player not working
+                    document.getElementById("song_player").src = song.songContent;
+                    document.getElementById("album_title").textContent = song.album_title;
+                    document.getElementById("song_performer").textContent = song.performer;
+                    document.getElementById("song_year").textContent = song.year;
+                    document.getElementById("song_genre").textContent = song.genre;
+                } else {
+                    document.getElementById("song_title").textContent = "Errore: " + message;
+                }
+            }
+        });
+    }
+
+    /**
+     * TODO
+     */
+    this.showReorderPage = function () {
+        document.getElementById("main_page").className = "masked";
+        document.getElementById("homepage_button").className = "displayed";
+        document.getElementById("playlist_page").className = "masked";
+        document.getElementById("song_page").className = "masked";
+        document.getElementById("reorder_page").className = "displayed";
 
         //TODO implement songPage
     }
