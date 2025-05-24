@@ -69,7 +69,7 @@ public class SongDAO {
      */
     private List<Song> getSongListFromResultSet(ResultSet resultSet) throws SQLException {
         if (!resultSet.isBeforeFirst()) {
-            return null;
+            return new ArrayList<>();
         }
 
         List<Song> songs = new ArrayList<>();
