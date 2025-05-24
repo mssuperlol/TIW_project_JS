@@ -107,6 +107,99 @@ function ShowPage() {
             }
         });
 
+        makeCall("GET", "GetSongsNotInPlaylist?playlistId=" + playlistId, null, function (req) {
+            if (req.readyState === 4) {
+                let message = req.responseText;
+                let addSongsForm = document.getElementById("add_songs_to_playlist");
+                addSongsForm.innerHTML = "";
+
+                if (req.status === 200) {
+                    let songs = JSON.parse(message);
+
+                    if (songs === null || songs.length === 0) {
+                        let text = document.createElement("p");
+                        text.textContent = "Tutte le tue canzoni sono già presenti nella playlist corrente. Per aggiungerne altre, carica altri brani dalla homepage."
+                        addSongsForm.appendChild(text);
+                        addSongsForm.textContent = "Tutte le tue canzoni sono già presenti nella playlist corrente. Per aggiungerne altre, carica altri brani dalla homepage.";
+                    } else {
+                        let table, row, titleCell, checkboxCell, checkboxLabel, checkboxInput;
+
+                        table = document.createElement("table");
+                        addSongsForm.append(table);
+
+                        songs.forEach(function (song) {
+                            row = document.createElement("tr");
+
+                            titleCell = document.createElement("td");
+                            titleCell.textContent = song.title;
+                            row.appendChild(titleCell);
+
+                            checkboxCell = document.createElement("td");
+                            row.appendChild(checkboxCell);
+
+                            checkboxLabel = document.createElement("label");
+                            checkboxCell.appendChild(checkboxLabel);
+
+                            checkboxInput = document.createElement("input");
+                            checkboxInput.type = "checkbox";
+                            checkboxInput.name = "songId" + song.id;
+                            checkboxLabel.appendChild(checkboxInput);
+
+                            table.append(row);
+                        });
+
+                        row = document.createElement("tr");
+
+                        let submitCell = document.createElement("td");
+                        row.appendChild(submitCell);
+
+                        let submit = document.createElement("input");
+                        submit.type = "submit";
+                        submit.value = "Aggiungi brani ->";
+                        submitCell.appendChild(submit);
+
+                        submitCell = document.createElement("td");
+                        submitCell.className = "error";
+                        submitCell.id = "add_songs_to_playlist_result";
+                        submitCell.textContent = "";
+                        row.appendChild(submitCell);
+
+                        table.appendChild(row);
+
+                        addSongsForm.addEventListener('submit', function check(e) {
+                            e.preventDefault();
+                            let form = e.target.closest("form");
+
+                            makeCall("POST", "AddSongsToPlaylist?playlistId=" + playlistId, form, function (req) {
+                                if (req.readyState === 4) {
+                                    let message = req.responseText;
+                                    if (req.status === 200) {
+                                        document.getElementById("add_songs_to_playlist_result").className = "success";
+                                        document.getElementById("add_songs_to_playlist_result").textContent = "Brani aggiunti con successo";
+                                        document.getElementById("add_songs_to_playlist").reset();
+
+                                        let showPage = new ShowPage();
+                                        showPage.playlistPageInit(playlistId);
+                                    } else if (req.status === 403) {
+                                        window.location.href = req.getResponseHeader("Location");
+                                        window.sessionStorage.removeItem('user_id');
+                                    } else {
+                                        document.getElementById("add_songs_to_playlist_result").className = "error";
+                                        document.getElementById("add_songs_to_playlist_result").textContent = "Errore: " + message;
+                                    }
+                                }
+                            });
+                        });
+                    }
+                } else if (req.status === 204) {
+                    let text = document.createElement("p");
+                    text.textContent = "Tutte le tue canzoni sono già presenti nella playlist corrente. Per aggiungerne altre, carica altri brani dalla homepage."
+                    addSongsForm.appendChild(text);
+                    addSongsForm.textContent = "Tutte le tue canzoni sono già presenti nella playlist corrente. Per aggiungerne altre, carica altri brani dalla homepage.";
+                }
+            }
+        });
+
         this.showPlaylistPage();
     }
 
@@ -188,7 +281,6 @@ function ShowPage() {
             document.getElementById("next_songs").className = "displayed";
             document.getElementById("next_songs").addEventListener("click", (e) => {
                 e.preventDefault();
-                console.log("songsIndex: " + songsIndex);
                 this.showVisibleSongs(songsIndex + 1);
             });
         } else {
