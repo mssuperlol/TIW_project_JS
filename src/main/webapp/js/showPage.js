@@ -84,7 +84,7 @@ function ShowPage() {
 
                                 currSongsTable.innerHTML = "";
 
-                                for (let i = 0; i < allSongs.length % VISIBLE_SONGS; i++) {
+                                for (let i = 0; i < allSongs.length / VISIBLE_SONGS; i++) {
                                     row = document.createElement("tr");
                                     row.id = i.toString();
 
