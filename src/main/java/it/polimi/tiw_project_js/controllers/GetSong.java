@@ -90,8 +90,6 @@ public class GetSong extends HttpServlet {
 
         String json = new GsonBuilder().create().toJson(jObj);
 
-        System.out.println(json);
-
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
