@@ -79,7 +79,7 @@ document.getElementById("upload_song_form").addEventListener('submit', function 
                 showPage.updateCreatePlaylistForm();
             } else if (req.status === 403) {
                 window.location.href = req.getResponseHeader("Location");
-                window.sessionStorage.removeItem('user');
+                window.sessionStorage.removeItem('user_id');
             } else {
                 document.getElementById("upload_song_result").className = "error";
                 document.getElementById("upload_song_result").textContent = "Errore: " + req.responseText;
