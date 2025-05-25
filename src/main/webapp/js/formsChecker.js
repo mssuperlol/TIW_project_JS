@@ -102,14 +102,28 @@ document.getElementById("create_playlist_form").addEventListener('submit', funct
         document.getElementById("create_playlist_result").className = "error";
         document.getElementById("create_playlist_result").textContent = "Il titolo della playlist non può essere vuoto";
     } else {
-        makeCall("POST", "CreatePlaylist", form, function (req) {
+        let url = "CreatePlaylist?title=" + form.title.value;
+
+        //from some reason, just sending the form with makeCall didn't work
+        let selectedSongs = form.getElementsByClassName("playlistCheckbox");
+
+        if (selectedSongs.length !== 0) {
+            for (let field of selectedSongs) {
+                if (field.checked) {
+                    url = url + "&" + field.name + "=on";
+                }
+            }
+        }
+
+        makeCall("POST", url, form, function (req) {
             if (req.status === 200) {
                 document.getElementById("create_playlist_result").className = "success";
                 document.getElementById("create_playlist_result").textContent = "Playlist creata con successo";
-                document.getElementById("form").reset();
 
+                console.log("Playlist creata con successo");
                 let showPage = new ShowPage();
                 showPage.updatePlaylists();
+                console.log("Playlist creata con successo's sequel");
             } else if (req.status === 403) {
                 window.location.href = req.getResponseHeader("Location");
                 window.sessionStorage.removeItem('user');
