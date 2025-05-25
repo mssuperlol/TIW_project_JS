@@ -17,7 +17,6 @@ import java.io.Serial;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @WebServlet("/AddSongsToPlaylist")
@@ -43,15 +42,17 @@ public class AddSongsToPlaylist extends HttpServlet {
 
         PlaylistDAO playlistDAO = new PlaylistDAO(connection);
         SongDAO songDAO = new SongDAO(connection);
-        int userId = user.getId();
+        int userId = user.getId(), playlistId;
         List<Integer> songs = new ArrayList<>(), userSongsId;
 
-        System.out.println("Called addSongsToPlaylist");
-
-        //TODO fix the request having no parameters
-        request.getParameterMap().forEach((k, v) -> {
-            System.out.println("key: " + k + " | value: " + Arrays.toString(v));
-        });
+        try {
+            playlistId = Integer.parseInt(request.getParameter("playlistId"));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Invalid playlist id");
+            return;
+        }
 
         try {
             userSongsId = songDAO.getSongsIdFromUserId(userId);
@@ -69,15 +70,15 @@ public class AddSongsToPlaylist extends HttpServlet {
         }
 
         try {
-            playlistDAO.addSongsToPlaylist(userId, songs);
+            playlistDAO.addSongsToPlaylist(playlistId, songs);
         } catch (SQLException e) {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().println("Database error: couldn't add songs to playlist");
             return;
         }
 
         response.setStatus(HttpServletResponse.SC_OK);
-        System.out.println("Finished addSongsToPlaylist");
     }
 
     @Override
