@@ -143,6 +143,7 @@ function ShowPage() {
                             checkboxInput = document.createElement("input");
                             checkboxInput.type = "checkbox";
                             checkboxInput.name = "songId" + song.id;
+                            checkboxInput.className = "songCheckbox";
                             checkboxLabel.appendChild(checkboxInput);
 
                             table.append(row);
@@ -166,29 +167,41 @@ function ShowPage() {
 
                         table.appendChild(row);
 
+                        //this should be moved to formsChecker.js for consistency, but it's probably better to leave this here since it needs playlistId to work
                         addSongsForm.addEventListener('submit', function check(e) {
                             e.preventDefault();
                             let form = e.target.closest("form");
+                            let url = "AddSongsToPlaylist?playlistId=" + playlistId;
 
-                            makeCall("POST", "AddSongsToPlaylist?playlistId=" + playlistId, form, function (req) {
-                                if (req.readyState === 4) {
-                                    let message = req.responseText;
-                                    if (req.status === 200) {
-                                        document.getElementById("add_songs_to_playlist_result").className = "success";
-                                        document.getElementById("add_songs_to_playlist_result").textContent = "Brani aggiunti con successo";
-                                        document.getElementById("add_songs_to_playlist").reset();
+                            //from some reason, just sending the form with makeCall didn't work
+                            let selectedSongs = form.getElementsByClassName("songCheckbox");
 
-                                        let showPage = new ShowPage();
-                                        showPage.playlistPageInit(playlistId);
-                                    } else if (req.status === 403) {
-                                        window.location.href = req.getResponseHeader("Location");
-                                        window.sessionStorage.removeItem('user_id');
-                                    } else {
-                                        document.getElementById("add_songs_to_playlist_result").className = "error";
-                                        document.getElementById("add_songs_to_playlist_result").textContent = "Errore: " + message;
+                            if (selectedSongs.length !== 0) {
+                                for (let field of selectedSongs) {
+                                    if (field.checked) {
+                                        url = url + "&" + field.name + "=on";
                                     }
                                 }
-                            });
+
+                                makeCall("POST", url, form, function (req) {
+                                    if (req.readyState === 4) {
+                                        let message = req.responseText;
+                                        if (req.status === 200) {
+                                            document.getElementById("add_songs_to_playlist_result").className = "success";
+                                            document.getElementById("add_songs_to_playlist_result").textContent = "Brani aggiunti con successo";
+
+                                            let showPage = new ShowPage();
+                                            showPage.playlistPageInit(playlistId);
+                                        } else if (req.status === 403) {
+                                            window.location.href = req.getResponseHeader("Location");
+                                            window.sessionStorage.removeItem('user_id');
+                                        } else {
+                                            document.getElementById("add_songs_to_playlist_result").className = "error";
+                                            document.getElementById("add_songs_to_playlist_result").textContent = "Errore: " + message;
+                                        }
+                                    }
+                                });
+                            }
                         });
                     }
                 } else if (req.status === 204) {
@@ -445,6 +458,7 @@ function ShowPage() {
                         checkboxInput = document.createElement("input");
                         checkboxInput.type = "checkbox";
                         checkboxInput.name = "songId" + song.id;
+                        checkboxInput.className = "playlistCheckbox";
                         checkboxLabel.appendChild(checkboxInput);
 
                         songsCheckbox.append(row);
