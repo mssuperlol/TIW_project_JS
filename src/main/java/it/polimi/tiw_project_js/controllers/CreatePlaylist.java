@@ -40,11 +40,6 @@ public class CreatePlaylist extends HttpServlet {
         String title = request.getParameter("title");
         List<Integer> songs = new ArrayList<>(), userSongsId;
 
-        //TODO fix the request having no parameters
-        request.getParameterMap().forEach((k, v) -> {
-            System.out.println("key: " + k + " | value: " + Arrays.toString(v));
-        });
-
         if (title == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Missing playlist title");
