@@ -120,10 +120,8 @@ document.getElementById("create_playlist_form").addEventListener('submit', funct
                 document.getElementById("create_playlist_result").className = "success";
                 document.getElementById("create_playlist_result").textContent = "Playlist creata con successo";
 
-                console.log("Playlist creata con successo");
                 let showPage = new ShowPage();
                 showPage.updatePlaylists();
-                console.log("Playlist creata con successo's sequel");
             } else if (req.status === 403) {
                 window.location.href = req.getResponseHeader("Location");
                 window.sessionStorage.removeItem('user');
