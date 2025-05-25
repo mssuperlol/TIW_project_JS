@@ -339,14 +339,58 @@ function ShowPage() {
     /**
      * TODO
      */
-    this.showReorderPage = function () {
+    this.showReorderPage = function (playlistId) {
         document.getElementById("main_page").className = "masked";
         document.getElementById("homepage_button").className = "displayed";
         document.getElementById("playlist_page").className = "masked";
         document.getElementById("song_page").className = "masked";
         document.getElementById("reorder_page").className = "displayed";
 
-        //TODO implement songPage
+        makeCall("GET", "GetSongsFromPlaylist?playlistId=" + playlistId, null, function (req) {
+            if (req.readyState === 4) {
+                let message = req.responseText;
+                if (req.status === 200) {
+                    let allSongs = JSON.parse(message);
+                    let reorderForm = document.getElementById("reorder_form");
+                    let table = reorderForm.querySelector("table");
+                    table.innerHTML = "";
+                    let row, cell;
+
+                    allSongs.forEach(function (song) {
+                        row = document.createElement("tr");
+
+                        cell = document.createElement("td");
+                        cell.textContent = song.title;
+                        cell.id = song.id;
+                        cell.className = "reorder_cell"
+
+                        row.appendChild(cell);
+
+                        table.appendChild(row);
+                    });
+
+                    let submit = document.getElementById("reorder_submit");
+                    submit.addEventListener('submit', function check(e) {
+                        e.preventDefault();
+                        let form = e.target.closest('form');
+                        //TODO
+                        let url = "TODO?playlistId=" + playlistId;
+
+                        let reorderedSongs = form.getElementsByClassName("reorder_cell");
+                        let i = 0;
+
+                        for (let row of reorderedSongs) {
+                            url = url + "&" + row.id + "=" + i;
+                            i++;
+                        }
+
+                        makeCall("POST", url, form, function (req) {
+                            //TODO
+                        });
+                    });
+                }
+            }
+        });
     }
 
     /**
