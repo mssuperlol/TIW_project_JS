@@ -1,7 +1,6 @@
 package it.polimi.tiw_project_js.dao;
 
 import it.polimi.tiw_project_js.beans.Playlist;
-import it.polimi.tiw_project_js.beans.Song;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
