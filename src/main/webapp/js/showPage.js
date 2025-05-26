@@ -76,6 +76,8 @@ playlistPageInit = function (playlistId) {
                 document.getElementById("playlist_title").textContent = currPlaylist.name;
                 document.getElementById("playlist_date").textContent = currPlaylist.date;
 
+                document.getElementById("playlist_title_reorder").textContent = currPlaylist.name;
+
                 makeCall("GET", "GetSongsFromPlaylist?playlistId=" + playlistId, null, function (songsReq) {
                     if (songsReq.readyState === 4) {
                         let songsMessage = songsReq.responseText;
@@ -179,10 +181,6 @@ playlistPageInit = function (playlistId) {
         }
     });
 
-    document.getElementById("reorder").onclick = function () {
-        showReorderPage(playlistId);
-    }
-
     showPlaylistPage();
 }
 
@@ -236,9 +234,6 @@ showSongPage = function (songId) {
     document.getElementById("playlist_page").className = "masked";
     document.getElementById("song_page").className = "displayed";
     document.getElementById("reorder_page").className = "masked";
-    document.getElementById("return_to_playlist").onclick = function () {
-        showPlaylistPage();
-    }
 
     makeCall("GET", "GetSong?songId=" + songId, null, function (req) {
         if (req.readyState === 4) {
@@ -344,12 +339,10 @@ updatePlaylists = function () {
 
                         playlistLink = document.createElement("a");
                         playlistLink.textContent = playlist.name;
-                        //TODO find a way to make the name of the playlist look like links without fucking everything up
-                        //playlistLink.href = "";
                         nameCell.appendChild(playlistLink);
 
                         //calls playlistPageInit on the clicked playlist
-                        playlistLink.onclick = function () {
+                        nameCell.onclick = function () {
                             playlistPageInit(playlist.id);
                         }
 
