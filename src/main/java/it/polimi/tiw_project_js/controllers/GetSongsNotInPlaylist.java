@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.tiw_project_js.beans.Song;
 import it.polimi.tiw_project_js.beans.User;
+import it.polimi.tiw_project_js.dao.PlaylistDAO;
 import it.polimi.tiw_project_js.dao.SongDAO;
 import it.polimi.tiw_project_js.utils.DBConnectionHandler;
 import jakarta.servlet.UnavailableException;
@@ -40,6 +41,7 @@ public class GetSongsNotInPlaylist extends HttpServlet {
         HttpSession session = request.getSession();
         response.setContentType("application/json");
         User user = (User) session.getAttribute("user");
+        PlaylistDAO playlistDAO = new PlaylistDAO(connection);
         int playlistId;
 
         try {
@@ -55,6 +57,12 @@ public class GetSongsNotInPlaylist extends HttpServlet {
         List<Song> songs;
 
         try {
+            if (user.getId() != playlistDAO.getUserId(playlistId)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().println("You do not have permission to access this playlist");
+                return;
+            }
+
             songs = songDAO.getSongsNotInPlaylist(user.getId(), playlistId);
         } catch (SQLException e) {
             e.printStackTrace();

@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.tiw_project_js.beans.Song;
 import it.polimi.tiw_project_js.beans.User;
+import it.polimi.tiw_project_js.dao.PlaylistDAO;
 import it.polimi.tiw_project_js.dao.SongDAO;
 import it.polimi.tiw_project_js.utils.DBConnectionHandler;
 import it.polimi.tiw_project_js.utils.GetEncoding;
@@ -42,6 +43,7 @@ public class GetSongsFromPlaylist extends HttpServlet {
         HttpSession session = request.getSession();
         response.setContentType("application/json");
         User user = (User) session.getAttribute("user");
+        PlaylistDAO playlistDAO = new PlaylistDAO(connection);
         int playlistId;
 
         try {
@@ -57,6 +59,12 @@ public class GetSongsFromPlaylist extends HttpServlet {
         List<Song> songs;
 
         try {
+            if (user.getId() != playlistDAO.getUserId(playlistId)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().println("You do not have permission to access this playlist");
+                return;
+            }
+
             songs = songDAO.getAllSongsFromPlaylist(playlistId);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,23 +76,27 @@ public class GetSongsFromPlaylist extends HttpServlet {
         JsonArray jArray = new JsonArray();
         JsonObject jSonObject;
 
-        for (Song song : songs) {
-            jSonObject = new JsonObject();
+        if (!songs.isEmpty()) {
+            for (Song song : songs) {
+                jSonObject = new JsonObject();
 
-            jSonObject.addProperty("id", song.getId());
-            jSonObject.addProperty("title", song.getTitle());
-            try {
-                jSonObject.addProperty("imageContent", GetEncoding.getFileEncoding(user.getId() + File.separator + song.getImage_file_name(), getServletContext()));
-            } catch (IOException e) {
-                jSonObject.addProperty("imageContent", "");
+                jSonObject.addProperty("id", song.getId());
+                jSonObject.addProperty("title", song.getTitle());
+                try {
+                    jSonObject.addProperty("imageContent", GetEncoding.getFileEncoding(user.getId() + File.separator + song.getImage_file_name(), getServletContext()));
+                } catch (IOException e) {
+                    jSonObject.addProperty("imageContent", "");
+                }
+
+                jArray.add(jSonObject);
+                response.setStatus(HttpServletResponse.SC_OK);
             }
-
-            jArray.add(jSonObject);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
 
         String json = new GsonBuilder().create().toJson(jArray);
 
-        response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().println(json);

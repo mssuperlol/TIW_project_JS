@@ -64,7 +64,7 @@ public class GetSong extends HttpServlet {
         }
 
         if (user.getId() != song.getUser_id()) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().println("Access to the song denied");
             return;
         }

@@ -35,6 +35,11 @@ public class AddSongsToPlaylist extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
@@ -55,6 +60,12 @@ public class AddSongsToPlaylist extends HttpServlet {
         }
 
         try {
+            if (user.getId() != playlistDAO.getUserId(playlistId)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().println("You do not have permission to add songs to that playlist");
+                return;
+            }
+
             userSongsId = songDAO.getSongsIdFromUserId(userId);
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
