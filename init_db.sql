@@ -51,7 +51,8 @@ create table songs
     primary key (id),
     foreign key (user_id) references users (id) on update cascade on delete no action,
     foreign key (genre) references genres (name) on update cascade on delete no action,
-    unique (user_id, music_file_name)
+    unique (user_id, music_file_name),
+    unique (user_id, title)
 );
 
 load data local infile 'docs/songs.tsv'
@@ -68,6 +69,7 @@ create table playlists
     user_id          int         not null,
     title            varchar(64) not null,
     date             date        not null default current_date,
+    #when adding a new song to the playlist, to know if it needs a custom_id or not
     has_custom_order boolean     not null default false,
     primary key (id),
     unique (user_id, title)
