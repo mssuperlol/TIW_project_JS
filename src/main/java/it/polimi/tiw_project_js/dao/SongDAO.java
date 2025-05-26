@@ -27,7 +27,7 @@ public class SongDAO {
         String query = "SELECT * " +
                 "FROM songs " +
                 "WHERE user_id = ? " +
-                "ORDER BY performer, year";
+                "ORDER BY performer, year, id";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -47,9 +47,9 @@ public class SongDAO {
      */
     public List<Song> getAllSongsFromPlaylist(int playlistId) throws SQLException {
         String query = "SELECT * " +
-                "FROM songs JOIN playlist_contents ON songs.id = playlist_contents.song " +
-                "WHERE playlist_contents.playlist = ? " +
-                "ORDER BY performer, year";
+                "FROM songs AS s JOIN playlist_contents AS c ON s.id = c.song " +
+                "WHERE c.playlist = ? " +
+                "ORDER BY custom_id, performer, year, id";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, playlistId);
@@ -147,7 +147,7 @@ public class SongDAO {
                 "   FROM playlist_contents " +
                 "   WHERE playlist = ?" +
                 ") " +
-                "ORDER BY performer, year";
+                "ORDER BY performer, year, id";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
