@@ -132,7 +132,42 @@ const maxDimension = 64;
         }
     }, false);
 
-    function checkAddSongsToPlaylist(e) {
+    /**
+     * Reorder form controller. Calls the UpdateCustomOrder servlet.
+     */
+    document.getElementById("reorder_form").addEventListener('submit', (e) => {
+        e.preventDefault();
+        let playlistId = sessionStorage.getItem("playlistId");
+        let form = e.target.closest('form');
+        let url = "UpdateCustomOrder?playlistId=" + playlistId;
+
+        let reorderedSongs = form.getElementsByClassName("reorder_cell");
+        let i = 0;
+
+        for (let row of reorderedSongs) {
+            url = url + "&" + i + "=" + row.id;
+            i++;
+        }
+
+        makeCall("POST", url, form, function (req) {
+            if (req.readyState === 4) {
+                let message = req.responseText;
+                if (req.status === 200) {
+                    playlistPageInit(playlistId);
+                } else if (req.status === 403) {
+                    window.location.href = req.getResponseHeader("Location");
+                    window.sessionStorage.removeItem('user');
+                } else {
+                    document.getElementById("reorder_error").textContent = message;
+                }
+            }
+        });
+    });
+
+    /**
+     * AddSongsToPlaylist form controller. If the number of selected songs is greater than 0, calls the AddSongsToPlaylist servlet.
+     */
+    document.getElementById("add_songs_to_playlist").addEventListener('submit', (e) => {
         e.preventDefault();
         let form = e.target.closest("form");
         let playlistId = sessionStorage.getItem("playlistId");
@@ -169,31 +204,5 @@ const maxDimension = 64;
                 }
             });
         }
-    }
-
-    document.getElementById("reorder_form").addEventListener('submit', (e) => {
-        e.preventDefault();
-        let playlistId = sessionStorage.getItem("playlistId");
-        let form = e.target.closest('form');
-        let url = "UpdateCustomOrder?playlistId=" + playlistId;
-
-        let reorderedSongs = form.getElementsByClassName("reorder_cell");
-        let i = 0;
-
-        for (let row of reorderedSongs) {
-            url = url + "&" + i + "=" + row.id;
-            i++;
-        }
-
-        makeCall("POST", url, form, function (req) {
-            if (req.readyState === 4) {
-                let message = req.responseText;
-                if (req.status === 200) {
-                    playlistPageInit(playlistId);
-                } else {
-                    document.getElementById("reorder_error").textContent = message;
-                }
-            }
-        });
-    });
+    }, false);
 }());

@@ -62,7 +62,7 @@ showHomepage = function () {
  */
 playlistPageInit = function (playlistId) {
     sessionStorage.setItem("playlistId", playlistId);
-    console.log("playlistId = " + playlistId);
+    // console.log("playlistId = " + playlistId);
 
     makeCall("GET", "GetPlaylist?playlistId=" + playlistId, null, function (playlistReq) {
         let currSongsTable = document.getElementById("displayed_songs");
@@ -102,9 +102,24 @@ playlistPageInit = function (playlistId) {
                             }
 
                             showVisibleSongs(0);
+                        } else if (songsReq.status === 204) {
+                            let text = document.createElement("p");
+                            text.textContent = "La playlist corrente non ha nessun brano associato. Usa il form sotto per aggiungerne."
+                            currSongsTable.appendChild(text);
+                            hideSongsButtons();
+                        } else if (songsReq.status === 403) {
+                            window.location.href = songsReq.getResponseHeader("Location");
+                            window.sessionStorage.removeItem('user');
+                        } else {
+                            document.getElementById("playlist_error").textContent = songsMessage;
                         }
                     }
                 });
+            } else if (playlistReq.status === 403) {
+                window.location.href = playlistReq.getResponseHeader("Location");
+                window.sessionStorage.removeItem('user');
+            } else {
+                document.getElementById("playlist_error").textContent = playlistMessage;
             }
         }
     });
@@ -168,15 +183,17 @@ playlistPageInit = function (playlistId) {
                     row.appendChild(submitCell);
 
                     table.appendChild(row);
-
-                    addSongsForm.removeEventListener('submit', checkAddSongsToPlaylist);
-                    addSongsForm.addEventListener('submit', checkAddSongsToPlaylist, false);
                 }
             } else if (req.status === 204) {
                 let text = document.createElement("p");
                 text.textContent = "Tutte le tue canzoni sono già presenti nella playlist corrente. Per aggiungerne altre, carica altri brani dalla homepage."
                 addSongsForm.appendChild(text);
                 addSongsForm.textContent = "Tutte le tue canzoni sono già presenti nella playlist corrente. Per aggiungerne altre, carica altri brani dalla homepage.";
+            } else if (req.status === 403) {
+                window.location.href = req.getResponseHeader("Location");
+                window.sessionStorage.removeItem('user');
+            } else {
+                document.getElementById("playlist_error").textContent = message;
             }
         }
     });
@@ -252,6 +269,9 @@ showSongPage = function (songId) {
                 document.getElementById("song_performer").textContent = song.performer;
                 document.getElementById("song_year").textContent = song.year;
                 document.getElementById("song_genre").textContent = song.genre;
+            } else if (req.status === 403) {
+                window.location.href = req.getResponseHeader("Location");
+                window.sessionStorage.removeItem('user');
             } else {
                 document.getElementById("song_title").textContent = "Errore: " + message;
             }
@@ -260,7 +280,8 @@ showSongPage = function (songId) {
 }
 
 /**
- * TODO
+ * Initialises the reorder_page with the songs in the current playlist with the "default" order
+ * @param playlistId
  */
 showReorderPage = function (playlistId) {
     document.getElementById("main_page").className = "masked";
@@ -290,6 +311,11 @@ showReorderPage = function (playlistId) {
 
                     table.appendChild(row);
                 });
+            } else if (req.status === 403) {
+                window.location.href = req.getResponseHeader("Location");
+                window.sessionStorage.removeItem('user');
+            } else {
+                document.getElementById("reorder_error").textContent = message;
             }
         }
     });
@@ -450,7 +476,7 @@ showVisibleSongs = function (songsIndex) {
         songsIndex = 0;
     }
 
-    console.log("songsIndex: " + songsIndex + "\nmaxRow = " + maxRow);
+    // console.log("songsIndex: " + songsIndex + "\nmaxRow = " + maxRow);
 
     for (let i = 0; i <= maxRow; i++) {
         if (i !== songsIndex) {
@@ -471,4 +497,12 @@ showVisibleSongs = function (songsIndex) {
     } else {
         document.getElementById("next_songs").className = "masked";
     }
+}
+
+/**
+ * If the current playlist doesn't have any songs, hides both button
+ */
+hideSongsButtons = function () {
+    document.getElementById("prev_songs").className = "masked";
+    document.getElementById("next_songs").className = "masked";
 }
