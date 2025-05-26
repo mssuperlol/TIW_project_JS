@@ -75,8 +75,7 @@ document.getElementById("upload_song_form").addEventListener('submit', function 
                 document.getElementById("upload_song_result").textContent = "Canzone caricata con successo";
                 document.getElementById("upload_song_form").reset();
 
-                let showPage = new ShowPage();
-                showPage.updateCreatePlaylistForm();
+                updateCreatePlaylistForm();
             } else if (req.status === 403) {
                 window.location.href = req.getResponseHeader("Location");
                 window.sessionStorage.removeItem('user_id');
@@ -120,8 +119,7 @@ document.getElementById("create_playlist_form").addEventListener('submit', funct
                 document.getElementById("create_playlist_result").className = "success";
                 document.getElementById("create_playlist_result").textContent = "Playlist creata con successo";
 
-                let showPage = new ShowPage();
-                showPage.updatePlaylists();
+                updatePlaylists();
             } else if (req.status === 403) {
                 window.location.href = req.getResponseHeader("Location");
                 window.sessionStorage.removeItem('user');
@@ -132,3 +130,75 @@ document.getElementById("create_playlist_form").addEventListener('submit', funct
         });
     }
 }, false);
+
+function checkAddSongsToPlaylist(e) {
+    e.preventDefault();
+    let form = e.target.closest("form");
+    let playlistId = sessionStorage.getItem("playlistId");
+    let url = "AddSongsToPlaylist?playlistId=" + playlistId;
+
+    //from some reason, just sending the form with makeCall didn't work
+    let selectedSongs = form.getElementsByClassName("songCheckbox");
+
+    if (selectedSongs.length !== 0) {
+        for (let field of selectedSongs) {
+            if (field.checked) {
+                url = url + "&" + field.name + "=on";
+            }
+        }
+
+        makeCall("POST", url, form, function (req) {
+            if (req.readyState === 4) {
+                let message = req.responseText;
+                if (req.status === 200) {
+                    document.getElementById("add_songs_to_playlist_result").className = "success";
+                    document.getElementById("add_songs_to_playlist_result").textContent = "Brani aggiunti con successo";
+
+                    let value = 0;
+                    sessionStorage.setItem("songsIndex", value.toString());
+
+                    playlistPageInit(playlistId);
+                } else if (req.status === 403) {
+                    window.location.href = req.getResponseHeader("Location");
+                    window.sessionStorage.removeItem('user_id');
+                } else {
+                    document.getElementById("add_songs_to_playlist_result").className = "error";
+                    document.getElementById("add_songs_to_playlist_result").textContent = "Errore: " + message;
+                }
+            }
+        });
+    }
+}
+
+document.getElementById("reorder_submit").addEventListener('submit', checkUpdateReorder);
+
+function checkUpdateReorder(e) {
+    console.log("Submitted reorder");
+    let playlistId = sessionStorage.getItem("playlistId");
+
+    e.preventDefault();
+    let form = e.target.closest('form');
+    let url = "UpdateCustomOrder?playlistId=" + playlistId;
+
+    let reorderedSongs = form.getElementsByClassName("reorder_cell");
+    let i = 0;
+
+    for (let row of reorderedSongs) {
+        url = url + "&" + i + "=" + row.id;
+        i++;
+    }
+
+    console.log("Calling " + url);
+
+    makeCall("POST", url, form, function (req) {
+        if (req.readyState === 4) {
+            let message = req.responseText;
+            if (req.status === 200) {
+                // showPlaylistPage(playlistId);
+                document.getElementById("reorder_error").textContent = "Fatto";
+            } else {
+                document.getElementById("reorder_error").textContent = message;
+            }
+        }
+    });
+}

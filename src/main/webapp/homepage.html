@@ -8,6 +8,7 @@
     <script src="js/homepageButton.js" charset="utf-8" defer></script>
     <script src="js/formsChecker.js" charset="utf-8" defer></script>
     <script src="js/showPage.js" charset="utf-8" defer></script>
+    <script src="js/miscEventListeners.js" charset="utf-8" defer></script>
     <!--comment row below for testing-->
     <script src="js/filter.js" charset="utf-8" defer></script>
     <link rel="stylesheet" type="text/css" media="all" href="css/hide.css">
@@ -127,6 +128,8 @@
     </table>
 
     <form id="add_songs_to_playlist"></form>
+
+    <button id="reorder">Riordina playlist</button>
 </div>
 
 <div id="song_page" class="masked">
@@ -149,7 +152,8 @@
         <table>
 
         </table>
-        <input type="submit" value="Riordina playlist ->" id="reorder_submit">
+        <input type="submit" value="Conferma riordine ->" id="reorder_submit">
+        <p id="reorder_error" class="error"></p>
     </form>
 </div>
 </body>

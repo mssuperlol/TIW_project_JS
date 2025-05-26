@@ -4,8 +4,7 @@
 (function () {
     document.getElementById("homepage_button").addEventListener("click", (e) => {
         e.preventDefault();
-        let showPage = new ShowPage();
-        //calls showHomepage since it's not necessary to do another call any servlet to update the homepage
-        showPage.showHomepage();
+        //calls directly showHomepage since it's not necessary to do another call any servlet to update the homepage
+        showHomepage();
     });
 }());
