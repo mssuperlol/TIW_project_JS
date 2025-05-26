@@ -24,11 +24,13 @@ public class PlaylistDAO {
      * @throws SQLException
      */
     public List<Playlist> getPlaylists(int userId) throws SQLException {
-        String query = "SELECT id, title, date " +
-                "FROM playlists " +
-                "WHERE user_id = ? " +
-                "GROUP BY id, date " +
-                "ORDER BY title, date DESC ";
+        String query = """
+                SELECT id, title, date
+                FROM playlists
+                WHERE user_id = ?
+                GROUP BY id, date
+                ORDER BY title, date DESC
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -60,9 +62,11 @@ public class PlaylistDAO {
      * @throws SQLException
      */
     public Playlist getPlaylist(int playlistId) throws SQLException {
-        String query = "SELECT * " +
-                "FROM playlists " +
-                "WHERE id = ?";
+        String query = """
+                SELECT *
+                FROM playlists
+                WHERE id = ?
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, playlistId);
@@ -133,9 +137,11 @@ public class PlaylistDAO {
      * @throws SQLException
      */
     public int getPlaylistId(int userId, String title) throws SQLException {
-        String query = "SELECT id " +
-                "FROM playlists " +
-                "WHERE user_id = ? AND title = ?";
+        String query = """
+                SELECT id
+                FROM playlists
+                WHERE user_id = ? AND title = ?
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -168,5 +174,42 @@ public class PlaylistDAO {
                 return resultSet.getInt("user_id");
             }
         }
+    }
+
+    public void updateCustomOrder(int playlistId, List<Integer> songsId) throws SQLException {
+        String query = """
+                UPDATE playlist_contents
+                SET custom_id = ?
+                WHERE playlist = ? AND song = ?
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            connection.setAutoCommit(false);
+
+            for (int i = 0; i < songsId.size(); i++) {
+                statement.setInt(1, i);
+                statement.setInt(2, playlistId);
+                statement.setInt(3, songsId.get(i));
+                statement.executeUpdate();
+            }
+
+            query = """
+                    UPDATE playlists
+                    SET has_custom_order = 1
+                    WHERE id = ?
+                    """;
+
+            try (PreparedStatement statement2 = connection.prepareStatement(query)) {
+                statement2.setInt(1, playlistId);
+                statement2.executeUpdate();
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        }
+
+        connection.setAutoCommit(true);
     }
 }
