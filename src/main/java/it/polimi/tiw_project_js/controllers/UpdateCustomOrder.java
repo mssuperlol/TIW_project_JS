@@ -60,7 +60,7 @@ public class UpdateCustomOrder extends HttpServlet {
         }
 
         try {
-            songIds = songDAO.getSongsIdsFromPlaylist(playlistId);
+            songIds = songDAO.getSongsIdFromPlaylist(playlistId);
         } catch (SQLException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

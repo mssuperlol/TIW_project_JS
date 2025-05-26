@@ -61,6 +61,33 @@ public class SongDAO {
     }
 
     /**
+     * @param playlistId id of the playlist
+     * @return list of all the songs' ids that belong to that playlist
+     * @throws SQLException
+     */
+    public List<Integer> getSongsIdFromPlaylist(int playlistId) throws SQLException {
+        String query = """
+                SELECT id
+                FROM songs AS s JOIN playlist_contents AS c ON s.id = c.song
+                WHERE playlist = ?
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, playlistId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                List<Integer> songIds = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    songIds.add(resultSet.getInt("id"));
+                }
+
+                return songIds;
+            }
+        }
+    }
+
+    /**
      * Extracts songs from a given resultSet
      *
      * @param resultSet
