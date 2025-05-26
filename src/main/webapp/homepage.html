@@ -147,14 +147,16 @@
     <button id="return_to_playlist">Torna alla playlist</button>
 </div>
 
-<div id="reorder_page" class="masked">
-    <button id="abort_reorder">Annulla riordino</button>
-    <h1>Riordino di <span id="playlist_title_reorder"></span></h1>
-    <form id="reorder_form">
-        <table></table>
-        <input type="submit" value="Conferma riordine ->" id="reorder_submit">
-        <p id="reorder_error" class="error"></p>
-    </form>
+<div id="reorder_modal" class="modal-overlay masked">
+    <div class="modal-wrapper">
+        <button id="abort_reorder">Annulla riordino</button>
+        <h1>Riordino di <span id="playlist_title_reorder"></span></h1>
+        <form id="reorder_form">
+            <table></table>
+            <input type="submit" value="Conferma riordine ->" id="reorder_submit">
+            <p id="reorder_error" class="error"></p>
+        </form>
+    </div>
 </div>
 </body>
 </html>

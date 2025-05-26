@@ -53,7 +53,6 @@ showHomepage = function () {
     document.getElementById("homepage_button").className = "masked";
     document.getElementById("playlist_page").className = "masked";
     document.getElementById("song_page").className = "masked";
-    document.getElementById("reorder_page").className = "masked";
 }
 
 /**
@@ -238,7 +237,6 @@ showPlaylistPage = function () {
     document.getElementById("homepage_button").className = "displayed";
     document.getElementById("playlist_page").className = "displayed";
     document.getElementById("song_page").className = "masked";
-    document.getElementById("reorder_page").className = "masked";
 }
 
 /**
@@ -250,7 +248,6 @@ showSongPage = function (songId) {
     document.getElementById("homepage_button").className = "displayed";
     document.getElementById("playlist_page").className = "masked";
     document.getElementById("song_page").className = "displayed";
-    document.getElementById("reorder_page").className = "masked";
 
     makeCall("GET", "GetSong?songId=" + songId, null, function (req) {
         if (req.readyState === 4) {
@@ -280,16 +277,10 @@ showSongPage = function (songId) {
 }
 
 /**
- * Initialises the reorder_page with the songs in the current playlist with the "default" order
+ * Initialises the reorder_modal with the songs in the current playlist with the "default" order
  * @param playlistId
  */
 showReorderPage = function (playlistId) {
-    document.getElementById("main_page").className = "masked";
-    document.getElementById("homepage_button").className = "displayed";
-    document.getElementById("playlist_page").className = "masked";
-    document.getElementById("song_page").className = "masked";
-    document.getElementById("reorder_page").className = "displayed";
-
     makeCall("GET", "GetSongsFromPlaylist?playlistId=" + playlistId, null, function (req) {
         if (req.readyState === 4) {
             let message = req.responseText;
