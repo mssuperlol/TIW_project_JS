@@ -255,13 +255,10 @@ showSongPage = function (songId) {
             if (req.status === 200) {
                 let song = JSON.parse(message);
                 document.getElementById("song_title").textContent = song.title;
-                // document.getElementById("song_image").src = song.imageContent;
-                document.getElementById("song_image").src = song.image_file_name;
-                //TODO fix song_player not working
+                document.getElementById("song_image").src = song.imageContent;
                 document.getElementById("song_player").type = "audio/mpeg";
                 document.getElementById("song_player").controls = "controls";
-                // document.getElementById("song_player").src = song.songContent;
-                document.getElementById("song_player").src = song.music_file_name;
+                document.getElementById("song_player").src = song.songContent;
                 document.getElementById("album_title").textContent = song.album_title;
                 document.getElementById("song_performer").textContent = song.performer;
                 document.getElementById("song_year").textContent = song.year;

@@ -8,6 +8,7 @@ import it.polimi.tiw_project_js.dao.SongDAO;
 import it.polimi.tiw_project_js.utils.DBConnectionHandler;
 import it.polimi.tiw_project_js.utils.GetEncoding;
 import jakarta.servlet.UnavailableException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import java.io.Serial;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@MultipartConfig
 @WebServlet("/GetSong")
 public class GetSong extends HttpServlet {
     @Serial
