@@ -176,6 +176,13 @@ public class PlaylistDAO {
         }
     }
 
+    /**
+     * Given a list of songs ids, updates their custom order relative to their position in the list
+     *
+     * @param playlistId id of the playlist
+     * @param songsId    ordered list of the playlist's songs
+     * @throws SQLException
+     */
     public void updateCustomOrder(int playlistId, List<Integer> songsId) throws SQLException {
         String query = """
                 UPDATE playlist_contents
