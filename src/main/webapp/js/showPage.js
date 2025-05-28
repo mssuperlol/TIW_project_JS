@@ -85,6 +85,7 @@ playlistPageInit = function (playlistId) {
                             let allSongs = JSON.parse(songsMessage);
                             let row, song;
 
+                            //fills songs table for the playlist
                             for (let i = 0; i < allSongs.length / VISIBLE_SONGS; i++) {
                                 row = document.createElement("tr");
                                 row.id = i.toString();
@@ -100,17 +101,41 @@ playlistPageInit = function (playlistId) {
                                 currSongsTable.appendChild(row);
                             }
 
+                            //fills the reorder modal
+                            let modalTable = document.getElementById("reorder_form").querySelector("table");
+                            modalTable.innerHTML = "";
+                            let cell;
+
+                            allSongs.forEach(function (song) {
+                                row = document.createElement("tr");
+                                row.className = "draggable";
+
+                                cell = document.createElement("td");
+                                cell.textContent = song.title;
+                                cell.id = "r" + song.id;
+                                cell.className = "reorder_cell"
+
+                                row.appendChild(cell);
+
+                                modalTable.appendChild(row);
+                            });
+
+                            document.getElementById("reorder_button").className = "displayed"
+
                             showVisibleSongs(0);
                         } else if (songsReq.status === 204) {
                             let text = document.createElement("p");
                             text.textContent = "La playlist corrente non ha nessun brano associato. Usa il form sotto per aggiungerne."
                             currSongsTable.appendChild(text);
+
                             hideSongsButtons();
+                            document.getElementById("reorder_button").className = "masked";
                         } else if (songsReq.status === 403) {
                             window.location.href = songsReq.getResponseHeader("Location");
                             window.sessionStorage.removeItem('user');
                         } else {
                             document.getElementById("playlist_error").textContent = songsMessage;
+                            document.getElementById("reorder_error").textContent = songsMessage;
                         }
                     }
                 });
@@ -268,42 +293,6 @@ showSongPage = function (songId) {
                 window.sessionStorage.removeItem('user');
             } else {
                 document.getElementById("song_title").textContent = "Errore: " + message;
-            }
-        }
-    });
-}
-
-/**
- * Initialises the reorder_modal with the songs in the current playlist with the "default" order
- * @param playlistId
- */
-showReorderPage = function (playlistId) {
-    makeCall("GET", "GetSongsFromPlaylist?playlistId=" + playlistId, null, function (req) {
-        if (req.readyState === 4) {
-            let message = req.responseText;
-            if (req.status === 200) {
-                let allSongs = JSON.parse(message);
-                let table = document.getElementById("reorder_form").querySelector("table");
-                table.innerHTML = "";
-                let row, cell;
-
-                allSongs.forEach(function (song) {
-                    row = document.createElement("tr");
-
-                    cell = document.createElement("td");
-                    cell.textContent = song.title;
-                    cell.id = song.id;
-                    cell.className = "reorder_cell"
-
-                    row.appendChild(cell);
-
-                    table.appendChild(row);
-                });
-            } else if (req.status === 403) {
-                window.location.href = req.getResponseHeader("Location");
-                window.sessionStorage.removeItem('user');
-            } else {
-                document.getElementById("reorder_error").textContent = message;
             }
         }
     });
