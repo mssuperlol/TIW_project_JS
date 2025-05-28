@@ -212,4 +212,29 @@ public class PlaylistDAO {
 
         connection.setAutoCommit(true);
     }
+
+    /**
+     * @param playlistId id of the playlist
+     * @return true if the playlist has a custom order, false otherwise
+     * @throws SQLException
+     */
+    public boolean hasCustomOrder(int playlistId) throws SQLException {
+        String query = """
+                SELECT has_custom_order 
+                FROM playlists 
+                WHERE id = ?
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, playlistId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (!resultSet.isBeforeFirst() || !resultSet.next()) {
+                    return false;
+                }
+
+                return resultSet.next();
+            }
+        }
+    }
 }

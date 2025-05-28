@@ -39,17 +39,25 @@ public class SongDAO {
     }
 
     /**
-     * Gets all the songs associated with the given playlist id
+     * Gets all the songs associated with the given playlist id, with the correct order
      *
      * @param playlistId playlist id
-     * @return a list containing all the songs associated with id, or null if no songs were found
+     * @return an ordered list containing all the songs associated with id, or null if no songs were found
      * @throws SQLException
      */
     public List<Song> getAllSongsFromPlaylist(int playlistId) throws SQLException {
-        String query = "SELECT * " +
-                "FROM songs AS s JOIN playlist_contents AS c ON s.id = c.song " +
-                "WHERE c.playlist = ? " +
-                "ORDER BY custom_id, performer, year, id";
+        String query = """
+                SELECT *
+                FROM songs AS s JOIN playlist_contents AS c ON s.id = c.song
+                WHERE c.playlist = ? 
+                """;
+
+        PlaylistDAO playlistDAO = new PlaylistDAO(connection);
+        if (playlistDAO.hasCustomOrder(playlistId)) {
+            query += " ORDER BY performer, year, id";
+        } else {
+            query += " ORDER BY -custom_id DESC, id";
+        }
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, playlistId);
