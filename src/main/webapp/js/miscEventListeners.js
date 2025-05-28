@@ -16,12 +16,6 @@
         showPlaylistPage();
     });
 
-    document.getElementById("reorder_button").addEventListener("click", (e) => {
-        e.preventDefault();
-        let playlistId = sessionStorage.getItem("playlistId");
-        showReorderPage(playlistId);
-    });
-
     const modal = document.querySelector(".modal-overlay");
 
     function closeModal(e, clickedOutside) {
