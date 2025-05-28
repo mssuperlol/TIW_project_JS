@@ -4,7 +4,7 @@ const maxDimension = 64;
     /**
      * UploadSong form controller. Checks if all the inputted values are valid: if so, the calls the UploadSong servlet; otherwise, clears the invalid values and displays an error. If the song is uploaded correctly, also updates the createPlaylist form with the new value.
      */
-    document.getElementById("upload_song_form").addEventListener('submit', function check(e) {
+    document.getElementById("upload_song_form").addEventListener("submit", function check(e) {
         e.preventDefault();
         let success = true;
         let form = e.target.closest("form");
@@ -79,7 +79,7 @@ const maxDimension = 64;
                     updateCreatePlaylistForm();
                 } else if (req.status === 403) {
                     window.location.href = req.getResponseHeader("Location");
-                    window.sessionStorage.removeItem('user_id');
+                    window.sessionStorage.removeItem("user_id");
                 } else {
                     document.getElementById("upload_song_result").className = "error";
                     document.getElementById("upload_song_result").textContent = "Errore: " + req.responseText;
@@ -94,7 +94,7 @@ const maxDimension = 64;
     /**
      * CreatePlaylist form controller. Checks if the title is valid, then calls the CreatePlaylist servlet. If the playlist is created correctly, also updates the playlist list in the homepage with the newly created one.
      */
-    document.getElementById("create_playlist_form").addEventListener('submit', function check(e) {
+    document.getElementById("create_playlist_form").addEventListener("submit", function check(e) {
         e.preventDefault();
         let form = e.target.closest("form");
 
@@ -123,7 +123,7 @@ const maxDimension = 64;
                     updatePlaylists();
                 } else if (req.status === 403) {
                     window.location.href = req.getResponseHeader("Location");
-                    window.sessionStorage.removeItem('user');
+                    window.sessionStorage.removeItem("user");
                 } else {
                     document.getElementById("create_playlist_result").className = "error";
                     document.getElementById("create_playlist_result").textContent = "Errore: " + req.responseText;
@@ -135,17 +135,18 @@ const maxDimension = 64;
     /**
      * Reorder form controller. Calls the UpdateCustomOrder servlet.
      */
-    document.getElementById("reorder_form").addEventListener('submit', (e) => {
+    document.getElementById("reorder_form").addEventListener("submit", (e) => {
         e.preventDefault();
         let playlistId = sessionStorage.getItem("playlistId");
-        let form = e.target.closest('form');
+        let form = e.target.closest("form");
         let url = "UpdateCustomOrder?playlistId=" + playlistId;
 
         let reorderedSongs = form.getElementsByClassName("reorder_cell");
         let i = 0;
 
         for (let row of reorderedSongs) {
-            url = url + "&" + i + "=" + row.id;
+            //each row's id is "r$ID", so remove the 'r' for the url
+            url = url + "&" + i + "=" + row.id.substring(1);
             i++;
         }
 
@@ -156,7 +157,7 @@ const maxDimension = 64;
                     playlistPageInit(playlistId);
                 } else if (req.status === 403) {
                     window.location.href = req.getResponseHeader("Location");
-                    window.sessionStorage.removeItem('user');
+                    window.sessionStorage.removeItem("user");
                 } else {
                     document.getElementById("reorder_error").textContent = message;
                 }
@@ -167,7 +168,7 @@ const maxDimension = 64;
     /**
      * AddSongsToPlaylist form controller. If the number of selected songs is greater than 0, calls the AddSongsToPlaylist servlet.
      */
-    document.getElementById("add_songs_to_playlist").addEventListener('submit', (e) => {
+    document.getElementById("add_songs_to_playlist").addEventListener("submit", (e) => {
         e.preventDefault();
         let form = e.target.closest("form");
         let playlistId = sessionStorage.getItem("playlistId");
@@ -196,7 +197,7 @@ const maxDimension = 64;
                         playlistPageInit(playlistId);
                     } else if (req.status === 403) {
                         window.location.href = req.getResponseHeader("Location");
-                        window.sessionStorage.removeItem('user_id');
+                        window.sessionStorage.removeItem("user_id");
                     } else {
                         document.getElementById("add_songs_to_playlist_result").className = "error";
                         document.getElementById("add_songs_to_playlist_result").textContent = "Errore: " + message;
