@@ -24,10 +24,12 @@ public class SongDAO {
      * @throws SQLException
      */
     public List<Song> getAllSongsFromUserId(int userId) throws SQLException {
-        String query = "SELECT * " +
-                "FROM songs " +
-                "WHERE user_id = ? " +
-                "ORDER BY performer, year, id";
+        String query = """
+                SELECT *
+                FROM songs
+                WHERE user_id = ?
+                ORDER BY performer, year, id
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -130,8 +132,10 @@ public class SongDAO {
      * @throws SQLException
      */
     public void insertSong(int userId, String title, String imageFileName, String albumTitle, String performer, int year, String genre, String musicFileName) throws SQLException {
-        String query = "INSERT into songs(user_id, title, image_file_name, album_title, performer, year, genre, music_file_name) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = """
+                INSERT into songs(user_id, title, image_file_name, album_title, performer, year, genre, music_file_name)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """;
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
             statement.setString(2, title);
@@ -153,7 +157,11 @@ public class SongDAO {
      * @throws SQLException
      */
     public Song getSong(int songId) throws SQLException {
-        String query = "SELECT * FROM songs WHERE id = ?";
+        String query = """
+                SELECT * 
+                FROM songs 
+                WHERE id = ?
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, songId);
@@ -175,14 +183,16 @@ public class SongDAO {
      * @throws SQLException
      */
     public List<Song> getSongsNotInPlaylist(int userId, int playlistId) throws SQLException {
-        String query = "SELECT * " +
-                "FROM songs " +
-                "WHERE user_id = ? AND id NOT IN( " +
-                "   SELECT song " +
-                "   FROM playlist_contents " +
-                "   WHERE playlist = ?" +
-                ") " +
-                "ORDER BY performer, year, id";
+        String query = """
+                SELECT *
+                FROM songs
+                WHERE user_id = ? AND id NOT IN (
+                    SELECT song
+                    FROM playlist_contents
+                    WHERE playlist = ?
+                )
+                ORDER BY performer, year, id
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -200,7 +210,11 @@ public class SongDAO {
      * @throws SQLException
      */
     public List<Integer> getSongsIdFromUserId(int userId) throws SQLException {
-        String query = "SELECT id FROM songs WHERE user_id = ?";
+        String query = """
+                SELECT id 
+                FROM songs 
+                WHERE user_id = ?
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -219,7 +233,7 @@ public class SongDAO {
 
     /**
      * @param resultSet
-     * @return
+     * @return song object with the result set data
      * @throws SQLException
      */
     private Song getSongFromResultSet(ResultSet resultSet) throws SQLException {

@@ -23,9 +23,11 @@ public class UserDAO {
      * @throws SQLException
      */
     public User checkLogin(String username, String password) throws SQLException {
-        String query = "SELECT id, username, name, surname " +
-                "FROM users " +
-                "WHERE username = ? AND password = ?";
+        String query = """
+                SELECT id, username, name, surname
+                FROM users
+                WHERE username = ? AND password = ?
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);

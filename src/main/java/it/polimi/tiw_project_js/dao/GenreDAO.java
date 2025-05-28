@@ -21,7 +21,10 @@ public class GenreDAO {
      * @throws SQLException
      */
     public List<String> getGenres() throws SQLException {
-        String query = "SELECT name FROM genres";
+        String query = """
+        SELECT name 
+        FROM genres
+        """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             try (ResultSet resultSet = statement.executeQuery()) {
