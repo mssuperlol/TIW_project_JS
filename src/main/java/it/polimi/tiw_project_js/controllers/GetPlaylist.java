@@ -70,6 +70,7 @@ public class GetPlaylist extends HttpServlet {
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(playlist);
 
+        response.setStatus(HttpServletResponse.SC_OK);
         response.setCharacterEncoding("UTF-8");
         response.getWriter().println(json);
     }

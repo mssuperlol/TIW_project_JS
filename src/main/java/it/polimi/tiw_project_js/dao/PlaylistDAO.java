@@ -227,7 +227,7 @@ public class PlaylistDAO {
      */
     public boolean hasCustomOrder(int playlistId) throws SQLException {
         String query = """
-                SELECT has_custom_order 
+                SELECT has_custom_order
                 FROM playlists 
                 WHERE id = ?
                 """;

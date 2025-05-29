@@ -47,7 +47,7 @@ public class UpdateCustomOrder extends HttpServlet {
 
         PlaylistDAO playlistDAO = new PlaylistDAO(connection);
         SongDAO songDAO = new SongDAO(connection);
-        List<Integer> songOrder = new ArrayList<>(), songIds = new ArrayList<>();
+        List<Integer> songOrder = new ArrayList<>(), songIds;
         int playlistId;
 
         try {

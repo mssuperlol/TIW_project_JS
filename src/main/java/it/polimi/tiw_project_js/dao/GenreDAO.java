@@ -22,7 +22,7 @@ public class GenreDAO {
      */
     public List<String> getGenres() throws SQLException {
         String query = """
-        SELECT name 
+        SELECT name
         FROM genres
         """;
 

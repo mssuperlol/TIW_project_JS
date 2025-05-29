@@ -51,7 +51,7 @@ public class SongDAO {
         String query = """
                 SELECT *
                 FROM songs AS s JOIN playlist_contents AS c ON s.id = c.song
-                WHERE c.playlist = ? 
+                WHERE c.playlist = ?
                 """;
 
         PlaylistDAO playlistDAO = new PlaylistDAO(connection);
@@ -100,7 +100,7 @@ public class SongDAO {
     /**
      * Extracts songs from a given resultSet
      *
-     * @param resultSet
+     * @param resultSet result set from which to take the list of songs
      * @return list of all songs from resultSet, or null if no songs were found
      * @throws SQLException
      */
@@ -158,8 +158,8 @@ public class SongDAO {
      */
     public Song getSong(int songId) throws SQLException {
         String query = """
-                SELECT * 
-                FROM songs 
+                SELECT *
+                FROM songs
                 WHERE id = ?
                 """;
 
@@ -211,8 +211,8 @@ public class SongDAO {
      */
     public List<Integer> getSongsIdFromUserId(int userId) throws SQLException {
         String query = """
-                SELECT id 
-                FROM songs 
+                SELECT id
+                FROM songs
                 WHERE user_id = ?
                 """;
 
@@ -232,7 +232,7 @@ public class SongDAO {
     }
 
     /**
-     * @param resultSet
+     * @param resultSet result set containing the song data
      * @return song object with the result set data
      * @throws SQLException
      */

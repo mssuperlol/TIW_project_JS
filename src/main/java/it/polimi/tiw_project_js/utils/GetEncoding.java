@@ -12,9 +12,9 @@ public class GetEncoding {
     /**
      * Static method that takes the file from local storage and encodes it into a base64 string
      *
-     * @param relativeFilePath
-     * @param context
-     * @return
+     * @param relativeFilePath path of the file relative to musicPath
+     * @param context context of the servlet to get the musicPath parameter
+     * @return encoded string of the file
      * @throws IOException
      */
     public static String getFileEncoding(String relativeFilePath, ServletContext context) throws IOException {
