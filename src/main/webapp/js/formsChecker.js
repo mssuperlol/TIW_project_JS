@@ -191,9 +191,6 @@ const maxDimension = 64;
                         document.getElementById("add_songs_to_playlist_result").className = "success";
                         document.getElementById("add_songs_to_playlist_result").textContent = "Brani aggiunti con successo";
 
-                        let value = 0;
-                        sessionStorage.setItem("songsIndex", value.toString());
-
                         playlistPageInit(playlistId);
                     } else if (req.status === 403) {
                         window.location.href = req.getResponseHeader("Location");
