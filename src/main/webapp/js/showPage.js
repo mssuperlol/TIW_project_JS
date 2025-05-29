@@ -88,7 +88,7 @@ playlistPageInit = function (playlistId) {
                             //fills songs table for the playlist
                             for (let i = 0; i < allSongs.length / VISIBLE_SONGS; i++) {
                                 row = document.createElement("tr");
-                                row.id = i.toString();
+                                row.id = "s" + i.toString();
 
                                 for (let j = 0; j < VISIBLE_SONGS; j++) {
                                     if (i * VISIBLE_SONGS + j < allSongs.length) {
@@ -441,25 +441,25 @@ updateCreatePlaylistForm = function () {
  * @param songsIndex index of the visible songs. If it's invalid, defaults at 0.
  */
 showVisibleSongs = function (songsIndex) {
-    sessionStorage.setItem("songsIndex", songsIndex);
     let maxRow = 0;
 
-    for (let i = 0; document.getElementById(i.toString()) !== null; i++) {
+    for (let i = 0; document.getElementById("s" + i.toString()) !== null; i++) {
         maxRow = i;
     }
 
     if (songsIndex === null || isNaN(songsIndex) || songsIndex < 0 || songsIndex > maxRow) {
-
         songsIndex = 0;
     }
+
+    sessionStorage.setItem("songsIndex", songsIndex);
 
     // console.log("songsIndex: " + songsIndex + "\nmaxRow = " + maxRow);
 
     for (let i = 0; i <= maxRow; i++) {
         if (i !== songsIndex) {
-            document.getElementById(i.toString()).className = "masked";
+            document.getElementById("s" + i.toString()).className = "masked";
         } else {
-            document.getElementById(songsIndex).className = "displayed";
+            document.getElementById("s" + songsIndex).className = "displayed";
         }
     }
 
