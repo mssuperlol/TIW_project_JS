@@ -1,4 +1,42 @@
 (function () {
+    /**
+     * The next few functions handle opening and closing the modal
+     * @type {Element}
+     */
+    const modal = document.querySelector(".modal-overlay");
+
+    /**
+     * Handles closing the modal
+     * @param e
+     * @param clickedOutside if the modal itself is clicked
+     */
+    function closeModal(e, clickedOutside) {
+        if (clickedOutside) {
+            //checks if the clicked thing is the modal-overlay itself
+            if (e.target.classList.contains("modal-overlay")) {
+                modal.classList.remove("displayed");
+                modal.classList.add("masked");
+            }
+        } else {
+            modal.classList.remove("displayed");
+            modal.classList.add("masked");
+        }
+    }
+
+    /**
+     * When the reorder button is clicked, displays the modal
+     */
+    document.getElementById("reorder_button").addEventListener("click", (e) => {
+        modal.classList.remove("masked");
+        modal.classList.add("displayed");
+    });
+
+    modal.addEventListener("click", (e) => closeModal(e, true));
+
+    document.getElementById("reorder_submit").addEventListener("click", closeModal);
+    document.getElementById("abort_reorder").addEventListener("click", closeModal);
+
+    // -------------------------------------------------
 
     document.getElementById("reorder_button").addEventListener("click", () => {
         let elements = document.getElementsByClassName("draggable")
@@ -102,4 +140,39 @@
         // Mark all rows in "not selected" class to reset previous dragOver
         unselectRows(rowsArray);
     }
+
+    // -------------------------------------------------
+
+    /**
+     * Reorder form controller. Calls the UpdateCustomOrder servlet.
+     */
+    document.getElementById("reorder_form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        let playlistId = sessionStorage.getItem("playlistId");
+        let form = e.target.closest("form");
+        let url = "UpdateCustomOrder?playlistId=" + playlistId;
+
+        let reorderedSongs = form.getElementsByClassName("reorder_cell");
+        let i = 0;
+
+        for (let row of reorderedSongs) {
+            //each row's id is "r$ID", so remove the 'r' for the url
+            url = url + "&" + i + "=" + row.id.substring(1);
+            i++;
+        }
+
+        makeCall("POST", url, form, function (req) {
+            if (req.readyState === 4) {
+                let message = req.responseText;
+                if (req.status === 200) {
+                    playlistPageInit(playlistId);
+                } else if (req.status === 403) {
+                    window.location.href = req.getResponseHeader("Location");
+                    window.sessionStorage.removeItem("user");
+                } else {
+                    document.getElementById("reorder_error").textContent = message;
+                }
+            }
+        });
+    });
 })();
