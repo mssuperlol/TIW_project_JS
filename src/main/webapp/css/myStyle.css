@@ -1,4 +1,6 @@
-/*tables*/
+/**
+ * Tables' style
+ */
 .playlist_table {
     table {
         table-layout: fixed;
@@ -27,7 +29,9 @@
     }
 }
 
-/*drag and drop*/
+/**
+ * Drag and drop
+ */
 .selected {
     color: red;
 }
@@ -36,7 +40,9 @@
     color: black;
 }
 
-/*errors*/
+/**
+ * Errors
+ */
 .error {
     color: red;
 }
@@ -44,7 +50,9 @@
     color: springgreen;
 }
 
-/*hide/reveal*/
+/**
+ * Hide/reveal
+ */
 .masked {
     display: none;
 }
@@ -52,7 +60,9 @@
     display: block;
 }
 
-/*modal*/
+/**
+ * Modal
+ */
 .modal-overlay {
     background: rgba(0, 0, 0, 0.7);
     width: 100%;
