@@ -13,7 +13,7 @@ const maxDimension = 256;
             document.getElementById("title_error").textContent = "Il titolo della canzone non può essere vuoto";
             success = false;
         } else if (form.title.value.length > maxDimension) {
-            document.getElementById("title_error").textContent = "Dimensione massima: " + maxDimension;
+            document.getElementById("title_error").textContent = "Il titolo non può essere più lungo di " + maxDimension + " caratteri";
             success = false;
         } else {
             document.getElementById("title_error").textContent = "";
@@ -22,7 +22,7 @@ const maxDimension = 256;
             document.getElementById("album_error").textContent = "Il titolo dell'album non può essere vuoto";
             success = false;
         } else if (form.album_title.value.length > maxDimension) {
-            document.getElementById("album_error").textContent = "Dimensione massima: " + maxDimension;
+            document.getElementById("album_error").textContent = "Il titolo dell'album non può essere più lungo di " + maxDimension + " caratteri";
             success = false;
         } else {
             document.getElementById("album_error").textContent = "";
@@ -31,7 +31,7 @@ const maxDimension = 256;
             document.getElementById("performer_error").textContent = "L'interprete non può essere vuoto";
             success = false;
         } else if (form.performer.value.length > maxDimension) {
-            document.getElementById("performer_error").textContent = "Dimensione massima: " + maxDimension;
+            document.getElementById("performer_error").textContent = "Il nome dell'interprete non può essere più lungo di " + maxDimension + " caratteri";
             success = false;
         } else {
             document.getElementById("performer_error").textContent = "";
@@ -101,6 +101,9 @@ const maxDimension = 256;
         if (form.title.value === null || form.title.value === "") {
             document.getElementById("create_playlist_result").className = "error";
             document.getElementById("create_playlist_result").textContent = "Il titolo della playlist non può essere vuoto";
+        } else if (form.title.value.length > maxDimension) {
+            document.getElementById("create_playlist_result").className = "error";
+            document.getElementById("create_playlist_result").textContent = "Il titolo non può essere più lungo di " + maxDimension + " caratteri";
         } else {
             let url = "CreatePlaylist?title=" + form.title.value;
 
