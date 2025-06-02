@@ -41,13 +41,13 @@ create table songs
 (
     id              int auto_increment,
     user_id         int          not null,
-    title           varchar(64)  not null,
-    image_file_name varchar(64)  not null,
-    album_title     varchar(64)  not null,
-    performer       varchar(64)  not null, #interprete
+    title           varchar(256) not null,
+    image_file_name varchar(256) not null,
+    album_title     varchar(256) not null,
+    performer       varchar(256) not null, #interprete
     year            int          not null check ( year > 0 ),
-    genre           varchar(64)  not null,
-    music_file_name varchar(128) not null,
+    genre           varchar(256) not null,
+    music_file_name varchar(256) not null,
     primary key (id),
     foreign key (user_id) references users (id) on update cascade on delete no action,
     foreign key (genre) references genres (name) on update cascade on delete no action,
@@ -66,11 +66,11 @@ load data local infile 'docs/songs.tsv'
 create table playlists
 (
     id               int auto_increment,
-    user_id          int         not null,
-    title            varchar(64) not null,
-    date             date        not null default current_date,
+    user_id          int          not null,
+    title            varchar(256) not null,
+    date             date         not null default current_date,
     #when adding a new song to the playlist, to know if it needs a custom_id or not
-    has_custom_order boolean     not null default false,
+    has_custom_order boolean      not null default false,
     primary key (id),
     unique (user_id, title)
 );

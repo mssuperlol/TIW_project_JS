@@ -1,4 +1,4 @@
-const maxDimension = 64;
+const maxDimension = 256;
 
 (function () {
     /**
