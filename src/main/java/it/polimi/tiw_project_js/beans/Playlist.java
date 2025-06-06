@@ -8,7 +8,6 @@ public class Playlist {
     private int userId;
     private String name;
     private Date date;
-    private List<Song> songs;
 
     public int getId() {
         return id;
@@ -40,17 +39,5 @@ public class Playlist {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public List<Song> getSongs() {
-        return songs;
-    }
-
-    public void setSongs(List<Song> songs) {
-        this.songs = songs;
-    }
-
-    public void addSong(Song song) {
-        songs.add(song);
     }
 }
