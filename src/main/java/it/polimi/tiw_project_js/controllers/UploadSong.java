@@ -49,7 +49,6 @@ public class UploadSong extends HttpServlet {
             response.getWriter().println("Missing image file");
             return;
         }
-
         if (!imageFilePart.getContentType().startsWith("image")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Image file format not permitted");
@@ -62,7 +61,6 @@ public class UploadSong extends HttpServlet {
             response.getWriter().println("Missing music file");
             return;
         }
-
         if (!musicFilePart.getContentType().startsWith("audio")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Music file format not permitted");

@@ -61,7 +61,7 @@ public class GetPlaylist extends HttpServlet {
             return;
         }
 
-        if (user.getId() != playlist.getUserId()) {
+        if (playlist == null || user.getId() != playlist.getUserId()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().println("Access to the playlist denied");
             return;

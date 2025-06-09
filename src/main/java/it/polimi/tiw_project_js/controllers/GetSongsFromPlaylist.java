@@ -76,7 +76,7 @@ public class GetSongsFromPlaylist extends HttpServlet {
         JsonArray jArray = new JsonArray();
         JsonObject jSonObject;
 
-        if (!songs.isEmpty()) {
+        if (songs != null && !songs.isEmpty()) {
             for (Song song : songs) {
                 jSonObject = new JsonObject();
 

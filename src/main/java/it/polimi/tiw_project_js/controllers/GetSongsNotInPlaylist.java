@@ -75,7 +75,7 @@ public class GetSongsNotInPlaylist extends HttpServlet {
         JsonObject jSonObject;
         String json = "";
 
-        if (!songs.isEmpty()) {
+        if (songs != null && !songs.isEmpty()) {
             for (Song song : songs) {
                 jSonObject = new JsonObject();
 

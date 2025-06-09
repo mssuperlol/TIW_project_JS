@@ -80,13 +80,15 @@ public class AddSongsToPlaylist extends HttpServlet {
             }
         }
 
-        try {
-            playlistDAO.addSongsToPlaylist(playlistId, songs);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Database error: couldn't add songs to playlist");
-            return;
+        if(!songs.isEmpty()) {
+            try {
+                playlistDAO.addSongsToPlaylist(playlistId, songs);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().println("Database error: couldn't add songs to playlist");
+                return;
+            }
         }
 
         response.setStatus(HttpServletResponse.SC_OK);
