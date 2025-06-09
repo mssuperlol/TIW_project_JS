@@ -20,6 +20,7 @@ showSongPage = function (songId) {
             let message = req.responseText;
             if (req.status === 200) {
                 let song = JSON.parse(message);
+                document.getElementById("song_error").textContent = "";
                 document.getElementById("song_title").textContent = song.title;
                 document.getElementById("song_image").src = song.imageContent;
                 document.getElementById("song_player").type = "audio/mpeg";
@@ -33,7 +34,7 @@ showSongPage = function (songId) {
                 window.location.href = req.getResponseHeader("Location");
                 window.sessionStorage.removeItem('user');
             } else {
-                document.getElementById("song_title").textContent = "Errore: " + message;
+                document.getElementById("song_error").textContent = "Errore: " + message;
             }
         }
     });

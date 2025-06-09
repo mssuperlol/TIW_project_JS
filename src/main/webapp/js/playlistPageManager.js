@@ -79,6 +79,7 @@ playlistPageInit = function (playlistId) {
                         let songsMessage = songsReq.responseText;
 
                         if (songsReq.status === 200) {
+                            document.getElementById("playlist_error").textContent = "";
                             let allSongs = JSON.parse(songsMessage);
                             let row, song;
 
