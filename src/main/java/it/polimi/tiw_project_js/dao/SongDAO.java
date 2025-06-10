@@ -121,19 +121,19 @@ public class SongDAO {
     /**
      * Adds a song to the songs database
      *
-     * @param userId
-     * @param title
-     * @param imageFileName
-     * @param albumTitle
-     * @param performer
-     * @param year
-     * @param genre
-     * @param musicFileName
+     * @param userId        id of the user
+     * @param title         title of the song
+     * @param imageFileName file name of the album image
+     * @param albumTitle    title of the album
+     * @param performer     artist of the song
+     * @param year          year of the performance
+     * @param genre         genre of the song
+     * @param musicFileName file name of the music file
      * @throws SQLException
      */
     public void insertSong(int userId, String title, String imageFileName, String albumTitle, String performer, int year, String genre, String musicFileName) throws SQLException {
         String query = """
-                INSERT into songs(user_id, title, image_file_name, album_title, performer, year, genre, music_file_name)
+                INSERT INTO songs(user_id, title, image_file_name, album_title, performer, year, genre, music_file_name)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """;
         try (PreparedStatement statement = connection.prepareStatement(query)) {

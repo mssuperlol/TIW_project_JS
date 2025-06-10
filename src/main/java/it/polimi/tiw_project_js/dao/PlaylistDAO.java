@@ -96,7 +96,10 @@ public class PlaylistDAO {
      * @throws SQLException
      */
     public void insertPlaylist(int userId, String title, List<Integer> songsId) throws SQLException {
-        String query = "INSERT INTO playlists (user_id, title) VALUES (?, ?)";
+        String query = """
+                INSERT INTO playlists (user_id, title)
+                VALUES (?, ?)
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -162,7 +165,11 @@ public class PlaylistDAO {
      * @throws SQLException
      */
     public int getUserId(int playlistId) throws SQLException {
-        String query = "SELECT user_id FROM playlists WHERE id = ?";
+        String query = """
+                SELECT user_id
+                FROM playlists
+                WHERE id = ?
+                """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, playlistId);
@@ -228,7 +235,7 @@ public class PlaylistDAO {
     public boolean hasCustomOrder(int playlistId) throws SQLException {
         String query = """
                 SELECT has_custom_order
-                FROM playlists 
+                FROM playlists
                 WHERE id = ?
                 """;
 
