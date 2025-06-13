@@ -155,6 +155,7 @@
         let reorderedSongs = form.getElementsByClassName("reorder_cell");
         let i = 0;
 
+        //error: since the call is POST, it should not have the url but only the form
         for (let row of reorderedSongs) {
             //each row's id is "r$ID", so remove the 'r' for the url
             url = url + "&" + i + "=" + row.id.substring(1);
