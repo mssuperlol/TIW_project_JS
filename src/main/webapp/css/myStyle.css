@@ -5,7 +5,7 @@
     table {
         table-layout: fixed;
         border: double;
-        width: 30%;
+        /*width: 30%;*/
         border-collapse: collapse;
     }
 
@@ -19,7 +19,7 @@
     table {
         table-layout: fixed;
         border: double;
-        width: 75%;
+        /*width: 75%;*/
         border-collapse: collapse;
     }
 
